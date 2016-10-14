@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>Blackjack2</name>
+=======
+	<name>Blackjack2(1)</name>
+>>>>>>> 4058e8b55ce3f63cd1810905747bd72542195b3b
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
+<<<<<<< HEAD
 		<buildCommand>
 			<name>org.eclipse.wst.common.project.facet.core.builder</name>
 			<arguments>
@@ -19,5 +24,9 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
+=======
+	</buildSpec>
+	<natures>
+>>>>>>> 4058e8b55ce3f63cd1810905747bd72542195b3b
 	</natures>
 </projectDescription>
