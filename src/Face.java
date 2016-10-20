@@ -1,7 +1,7 @@
 
 
 //enum för kortens värde
-public enum CardValue {
+public enum Face {
 	TVÅ(2),
 	TRE(3),
 	FYRA(4),
@@ -20,7 +20,7 @@ public enum CardValue {
 	private int kortVärde;
 	
 	//konstruktor
-	private CardValue(int kortVärde){
+	private Face(int kortVärde){
 		this.kortVärde = kortVärde;
 	}
 	//getter
