@@ -6,29 +6,29 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class SaveAndLoad {
-	File fil = new File("src/forTest/save.txt");
+	File file = new File("src/forTest/save.txt");
 	private int money;
 	
-	
+	//hämta pengara
 	public int getMoney() {
 		return money;
 	}
 
-
+	//sätta pengar
 	public void setMoney(int money) {
 		this.money = money;
 	}
 
-
+	//sparar pengarna til en fil
 	public void Save() throws IOException{
 		
 			try {
 			//ska bort, instansvari money används sedan
 			String money2 = "pengar lolol2";
 			
-			File file = new File("src/forTest/save.txt");
 			
-			// if file doesnt exists, then create it
+			
+			// om filen inte finns, skapa den
 			if (!file.exists()) {
 				file.createNewFile();
 			}
@@ -46,9 +46,9 @@ public class SaveAndLoad {
 		}
 	}
 	
-	
+	//laddar in filen
 	public void Load() throws FileNotFoundException{
-		Scanner sc = new Scanner(new File("src/forTest/save.txt"));
+		Scanner sc = new Scanner(file);
 		String s = "";
 		while(sc.hasNext()){
 			s = sc.nextLine();
