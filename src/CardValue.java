@@ -1,4 +1,4 @@
-package team2;
+
 
 //enum för kortens värde
 public enum CardValue {
