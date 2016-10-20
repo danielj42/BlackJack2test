@@ -2,30 +2,30 @@
 
 //enum för kortens värde
 public enum CardValue {
-	TWO(2),
-	THREE(3),
-	FOUR(4),
-	FIVE(5),
-	SIX(6),
-	SEVEN(7),
-	EIGHT(8),
-	NINE(9),
-	TEN(10),
-	JACK(11),
-	QUEEN(12),
-	KING(13),
-	ACE(14);
+	TVÅ(2),
+	TRE(3),
+	FYRA(4),
+	FEM(5),
+	SEX(6),
+	SJU(7),
+	ÅTTA(8),
+	NIO(9),
+	TIO(10),
+	KNÄCKT(11),
+	DAM(12),
+	KUNG(13),
+	ÄSS(14);
 
 	//instansvariabel
-	private int cardValue;
+	private int kortVärde;
 	
 	//konstruktor
-	private CardValue(int cardvalue){
-		this.CardValue = cardvalue;
+	private CardValue(int kortVärde){
+		this.kortVärde = kortVärde;
 	}
 	//getter
 	private int getCardValue(){
-		return CardValue;
+		return kortVärde;
 	}
 	
 }
