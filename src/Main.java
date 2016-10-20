@@ -9,8 +9,7 @@ public class Main {
 		//Menu menu = new Menu(); //i väntan på Menu
 		//menu.printStartMenu(); // i väntan på Menu
 		FrontEnd frontEnd = new FrontEnd();
-		frontEnd.dealCards();
-		frontEnd.dealerDraw();
+		
 
 
 	}
