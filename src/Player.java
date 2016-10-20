@@ -19,9 +19,13 @@ public class Player {
 		credit = someCredit;
 	}
 	
+	public setName(String aName){
+		name = aName;
+	}
+	
 	public String getName(){
 		return name;
-	}
+	}	
 	
 	public int getCredit(){
 		return credit;
@@ -30,6 +34,5 @@ public class Player {
 	public void updateCredit(int aCredit){
 		credit += nCredit;
 	}
-	
 
 }
