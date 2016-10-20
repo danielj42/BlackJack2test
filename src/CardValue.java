@@ -11,10 +11,10 @@ public enum CardValue {
 	ÅTTA(8),
 	NIO(9),
 	TIO(10),
-	KNÄCKT(11),
-	DAM(12),
-	KUNG(13),
-	ÄSS(14);
+	KNEKT(10),
+	DAM(10),
+	KUNG(10),
+	ESS(11);
 
 	//instansvariabel
 	private int kortVärde;
