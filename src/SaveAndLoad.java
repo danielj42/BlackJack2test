@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class SaveAndLoad {
-	File file = new File("src/forTest/save.txt");
+	File file = new File("src/Blackjack2/save.txt");
 	private int money;
 	
 	//hämta pengara
@@ -54,6 +54,6 @@ public class SaveAndLoad {
 			s = sc.nextLine();
 			System.out.println(s);
 			}
-			
+			sc.close();
 		}
 }
