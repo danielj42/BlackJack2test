@@ -1,11 +1,11 @@
 
 public class Card {
 	private Suit suit;
-	private Face face;
+	private Face faceValue;
 	
-	public Card(Suit suit, Face face) {
+	public Card(Face face,Suit suit) {
 		this.suit = suit;
-		this.face = face;
+		this.faceValue = face;
 	}
 	public Suit getSuit() {
 		return suit;
@@ -15,12 +15,12 @@ public class Card {
 		this.suit = suit;
 	}
 	
-	public Face getFace() {
-		return face;
+	public Face getFaceValue() {
+		return faceValue;
 	}
 	
-	public void setFace() {
-		this.face = face;
+	public void setFaceValue() {
+		this.faceValue = faceValue;
 	}
 	
 }

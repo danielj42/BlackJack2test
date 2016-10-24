@@ -16,16 +16,15 @@ public enum Face {
 	KUNG(10),
 	ESS(11);
 
-	//instansvariabel
-	private int kortVärde;
-	
-	//konstruktor
-	private Face(int kortVärde){
-		this.kortVärde = kortVärde;
-	}
-	//getter
-	private int getCardValue(){
-		return kortVärde;
-	}
+	private int cardValue;
+	 
+	  private Face (int value)
+	  {
+	    this.cardValue = value;
+	  }
+	 
+	  public int getCardValue() {
+	    return cardValue;
+	  }
 	
 }
