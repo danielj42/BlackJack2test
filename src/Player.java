@@ -19,7 +19,7 @@ public class Player {
 		credit = someCredit;
 	}
 	
-	public setName(String aName){
+	public void setName(String aName){
 		name = aName;
 	}
 	
@@ -32,7 +32,7 @@ public class Player {
 	}
 	
 	public void updateCredit(int aCredit){
-		credit += nCredit;
+		credit += aCredit;
 	}
 
 }
