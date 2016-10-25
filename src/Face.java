@@ -1,7 +1,7 @@
 
 
 //enum för kortens värde
-public enum CardValue {
+public enum Face {
 	TWO(2),
 	THREE(3),
 	FOUR(4),
@@ -16,16 +16,14 @@ public enum CardValue {
 	KING(13),
 	ACE(14);
 
-	//instansvariabel
-	private int cardValue;
-	
-	//konstruktor
-	private CardValue(int cardvalue){
-		this.CardValue = cardvalue;
+	private final int value;
+
+	private Face(int value) {
+		this.value = value;
 	}
-	//getter
-	private int getCardValue(){
-		return CardValue;
+
+	public int getValue() {
+		return value;
 	}
 	
 }

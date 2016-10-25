@@ -38,7 +38,7 @@ public class Dealer {
 		if (hitStay.equalsIgnoreCase("hit")){
 			while (player.getPlayerRoundPoints() < 21 && hitStay.equalsIgnoreCase("hit")){
 				if (hitStay.equalsIgnoreCase("hit")){
-					System.out.println("You drew a " + (playersCard.get(0).getFaceValue() +" "+ playersCard.get(0).getSuit() + "."));
+					System.out.println("You drew a " + (playersCard.get(0).getFace() +" "+ playersCard.get(0).getSuit() + "."));
 					System.out.println("Your total is " + player.getPlayerRoundPoints());
 
 				}else if(player.getPlayerRoundPoints() > 21){
