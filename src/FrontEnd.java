@@ -50,7 +50,7 @@ public class FrontEnd extends JFrame{
 		
 		//Spel while-sats som körs tills spelaren har fler än 21 poäng och blir tjock
 		while(playerPoints <= 21 && dealerPoints <= 21) {
-			System.out.println("Vill du dra ett till kort? Mata in 1 för ja, 2 för stanna.");
+			System.out.println("Vill du dra ett till kort? \nMata in 1 för ja, 2 för stanna.");
 		
 			if (sc.next().equals("1")) {
 				dealCards();
@@ -66,7 +66,7 @@ public class FrontEnd extends JFrame{
 		
 		//Skriver ut resultatet av omgången
 		System.out.println("\nResultat av omgång:");
-		System.out.printf("Dealern fick %d poäng. Spelaren fick %d poäng.\n", dealerPoints, playerPoints);
+		System.out.printf("Dealern fick %d poäng. \nDu fick %d poäng.\n", dealerPoints, playerPoints);
 		
 		if(dealerPoints <= 21 && playerPoints <= 21) {
 			if (dealerPoints > playerPoints) {
@@ -140,14 +140,14 @@ public class FrontEnd extends JFrame{
 		if (dealerPoints <= 0) {
 			nextPoints = randomGen.nextInt(10) + 1;
 			dealerPoints += nextPoints;
-			System.out.println("Dealern drog en " + getCardSuit() + " " + getCardName(nextPoints) + ". Hen har " + dealerPoints + " poäng.");
+			System.out.println("Dealern drog en " + getCardSuit() + " " + getCardName(nextPoints) + ". \nHen har " + dealerPoints + " poäng.");
 		} else {
 			System.out.println("Dealern har " + dealerPoints + " poäng.");
 		}
 		
 		nextPoints = randomGen.nextInt(10) + 1;
 		playerPoints += nextPoints;
-		System.out.println("Spelaren drog en " + getCardSuit() + " " + getCardName(nextPoints) + ". Hen har " + playerPoints + " poäng.\n");
+		System.out.println("Du drog en " + getCardSuit() + " " + getCardName(nextPoints) + ". \nDu har " + playerPoints + " poäng.\n");
 	}
 	
 	public void dealerDraw() {	//Delar ut kort bara till dealern
