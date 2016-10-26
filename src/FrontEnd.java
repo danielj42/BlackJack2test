@@ -27,7 +27,7 @@ public class FrontEnd extends JFrame{
 //		JPanel spelarYta = new JPanel();
 //		
 //		setLayout(new GridLayout (1, 2));
-//		spel.add(dealerYta);
+//		spel.add(dealerYta); hej
 //		spel.add(spelarYta);
 //		
 //		spel.setBackground(Color.GREEN);
