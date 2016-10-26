@@ -21,10 +21,11 @@ public class SaveAndLoad {
 
     //sparar pengarna til en fil
     public void Save() throws IOException{
-        
+        	System.out.println("pengar: "+ money);
             try {
             // om filen inte finns, skapa den
             if (!file.exists()) {
+            	System.out.println("finns ej");
                 money = 1000;
                 file.createNewFile();
             }
@@ -43,8 +44,13 @@ public class SaveAndLoad {
     }
     
     //laddar in filen
-    public void Load() throws FileNotFoundException{
-        Scanner sc = new Scanner(file);
+    public void Load() throws IOException{
+        
+    	if (!file.exists()) {
+        	Save();
+    	}else{
+    	
+    	Scanner sc = new Scanner(file);
         String s = "";
         while(sc.hasNext()){
             s = sc.nextLine();
@@ -52,5 +58,9 @@ public class SaveAndLoad {
             }
         
         this.money = Integer.parseInt(s);
-        }
+        	sc.close();
+    	}
+    	
+    	
+    }
 }
