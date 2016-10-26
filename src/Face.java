@@ -1,29 +1,28 @@
-
-
 //enum för kortens värde
 public enum Face {
-	TWO(2),
-	THREE(3),
-	FOUR(4),
-	FIVE(5),
-	SIX(6),
-	SEVEN(7),
-	EIGHT(8),
-	NINE(9),
-	TEN(10),
-	JACK(11),
-	QUEEN(12),
-	KING(13),
-	ACE(14);
+	TVÅ(2),
+	TRE(3),
+	FYRA(4),
+	FEM(5),
+	SEX(6),
+	SJU(7),
+	ÅTTA(8),
+	NIO(9),
+	TIO(10),
+	KNEKT(10),
+	DAM(10),
+	KUNG(10),
+	ESS(11);
 
-	private final int value;
-
-	private Face(int value) {
-		this.value = value;
-	}
-
-	public int getValue() {
-		return value;
-	}
+	private int faceValue;
+	 
+	  private Face (int value)
+	  {
+	    this.faceValue = value;
+	  }
+	 
+	  public int getFaceValue() {
+	    return faceValue;
+	  }
 	
 }
