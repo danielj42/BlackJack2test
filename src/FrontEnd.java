@@ -82,6 +82,14 @@ public class FrontEnd extends JFrame{
 			winMoney();
 		} else {
 			System.out.println("Det blev en likaomgång.");
+			
+			if ((dealerPoints == 20 && playerPoints == 20) || (playerPoints == 21 && dealerPoints == 21)){	//Om spelaren och dealern båda får 20 eller 21 får man tillbaka insatsen
+				System.out.println("Du fick tillbaka din insats.");
+				int kassa = sAL.getMoney();
+				sAL.setMoney(satsning + kassa);
+				showCash();
+				sAL.Save();
+			}
 		}
 		
 	}
