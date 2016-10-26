@@ -1,15 +1,56 @@
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
-public class FrontEnd {
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+public class FrontEnd extends JFrame{
 	Random randomGen = new Random();
 	int dealerPoints = 0, playerPoints = 0;
+	int nextPoints = 0;
+	public int satsning;
 	
-	public FrontEnd() {
+	//Spara pengar
+	SaveAndLoad sAL = new SaveAndLoad();
+	
+	public FrontEnd() throws IOException{
 		Scanner sc = new Scanner(System.in);
-
+		
+		//Grafiskt gränssnitt
+//		JFrame bJack = new JFrame();
+//		JLabel spel = new JLabel("BlackJack Team 2");
+//		JPanel dealerYta = new JPanel();
+//		JPanel spelarYta = new JPanel();
+//		
+//		setLayout(new GridLayout (1, 2));
+//		spel.add(dealerYta);
+//		spel.add(spelarYta);
+//		
+//		spel.setBackground(Color.GREEN);
+//		spel.setOpaque(true);
+//		
+//		setSize(900, 600);	//Storlek på fönstret (JLabeln)
+//		setVisible(true);
+//		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		//Hämta hur mycket pengar man har i kassan
+		sAL.setMoney(1000);
+		sAL.Save();
+		sAL.Load();
+		
+		System.out.println("Du har " + sAL.getMoney() + " kr sparade i kassan.");
+		System.out.println("Hur mycket vill du satsa?");
+		satsning = sc.nextInt();
+		
+		//Delar ut kort till spelare och dealer
 		dealCards();
-
+		dealCards();
+		
+		//Spel while-sats som körs tills spelaren har fler än 21 poäng och blir tjock
 		while(playerPoints <= 21 && dealerPoints <= 21) {
 			System.out.println("Vill du dra ett till kort? Mata in 1 för ja, 2 för stanna.");
 		
@@ -20,10 +61,12 @@ public class FrontEnd {
 			}
 		}
 		
-		while (dealerPoints<16) {
+		//Delar ut kort till dealern till hen har över 17 poäng
+		while (dealerPoints<17) {
 			dealerDraw();
 		}
 		
+		//Skriver ut resultatet av omgången
 		System.out.println("\nResultat av omgång:");
 		System.out.printf("Dealern fick %d poäng. Spelaren fick %d poäng.\n", dealerPoints, playerPoints);
 		
@@ -32,11 +75,13 @@ public class FrontEnd {
 				System.out.println("Du förlorade tyvärr!");
 			} else if (playerPoints > dealerPoints){
 				System.out.println("Du vann!");
+				winMoney();
 			}
 		} else if (dealerPoints <= 21) {
 			System.out.println("Du blev tjock. Dealern vann.");
 		} else if (playerPoints <= 21) {
 			System.out.println("Dealern blev tjock. Du vann!");
+			winMoney();
 		} else {
 			System.out.println("Det blev en likaomgång.");
 		}
@@ -46,7 +91,7 @@ public class FrontEnd {
 	public String getCardName(int points) {		//Ta bort denna och använd kort-enum
 		String cardName = "";
 		
-		if (points > 10) {
+		if (points >= 10) {
 			int i = randomGen.nextInt(2) + 1;
 
 			switch (i) {
@@ -57,6 +102,8 @@ public class FrontEnd {
 			case 3: cardName = "knekt";
 					break;
 			} 
+		}else if (points == 1) {
+			cardName = "ess";
 		}else {
 			cardName = Integer.toString(points);
 		}
@@ -84,21 +131,27 @@ public class FrontEnd {
 
 	public void dealCards() {	//Skall använda sig av kort-enum
 		
-		if (dealerPoints < 16) {
-			dealerPoints += randomGen.nextInt(10) + 1;
-			System.out.println("Dealern drog en " + getCardSuit() + " " + getCardName(dealerPoints) + ". Hen har " + dealerPoints + " poäng.");
+		if (dealerPoints <= 0) {
+			nextPoints = randomGen.nextInt(10) + 1;
+			dealerPoints += nextPoints;
+			System.out.println("Dealern drog en " + getCardSuit() + " " + getCardName(nextPoints) + ". Hen har " + dealerPoints + " poäng.");
 		} else {
-			System.out.println("Dealern har stannat. Hen har " + dealerPoints + " poäng.");
+			System.out.println("Dealern har " + dealerPoints + " poäng.");
 		}
 		
-		playerPoints += randomGen.nextInt(10) + 1;
-		System.out.println("Spelaren drog en " + getCardSuit() + " " + getCardName(playerPoints) + ". Hen har " + playerPoints + " poäng.");
+		nextPoints = randomGen.nextInt(10) + 1;
+		playerPoints += nextPoints;
+		System.out.println("Spelaren drog en " + getCardSuit() + " " + getCardName(nextPoints) + ". Hen har " + playerPoints + " poäng.\n");
 	}
 	
-	public void dealerDraw() {
-		dealerPoints += randomGen.nextInt(10) + 1;
-		System.out.println("Dealern drog en " + getCardSuit() + " " + getCardName(dealerPoints) + ". Hen har " + dealerPoints + " poäng.");
+	public void dealerDraw() {	//Delar ut kort bara till dealern
+		nextPoints = randomGen.nextInt(10) + 1;
+		dealerPoints += nextPoints;
+		System.out.println("Dealern drog en " + getCardSuit() + " " + getCardName(nextPoints) + ". Hen har " + dealerPoints + " poäng.");
 
 	}
 	
+	public void winMoney(){
+		System.out.println("Du vann " + satsning * 2 + " kronor!");
+	}
 }
