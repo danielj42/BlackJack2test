@@ -1,12 +1,8 @@
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class FrontEnd extends JFrame{
 	Random randomGen = new Random();
@@ -38,13 +34,15 @@ public class FrontEnd extends JFrame{
 //		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		//Hämta hur mycket pengar man har i kassan
-		sAL.setMoney(1000);
-		sAL.Save();
+		
 		sAL.Load();
 		
-		System.out.println("Du har " + sAL.getMoney() + " kr sparade i kassan.");
+		showCash();
 		System.out.println("Hur mycket vill du satsa?");
 		satsning = sc.nextInt();
+		sAL.setMoney(sAL.getMoney() - satsning);
+		showCash();
+		sAL.Save();
 		
 		//Delar ut kort till spelare och dealer
 		dealCards();
@@ -151,7 +149,15 @@ public class FrontEnd extends JFrame{
 
 	}
 	
-	public void winMoney(){
+	public void winMoney() throws IOException{
 		System.out.println("Du vann " + satsning * 2 + " kronor!");
+		int kassa = sAL.getMoney();
+		sAL.setMoney(satsning * 2 + kassa);
+		showCash();
+		sAL.Save();
+	}
+	
+	public void showCash() {
+		System.out.println("Du har " + sAL.getMoney() + " kr i kassan.");
 	}
 }
