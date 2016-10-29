@@ -17,7 +17,7 @@ public class Deck
       for (int j=0; j<4; j++)	//4 färger
       {
         Card card = new Card(face, Suit.values()[j]);
-        this.deck.add(face);
+        this.deck.add(card);
       }
     }
  
