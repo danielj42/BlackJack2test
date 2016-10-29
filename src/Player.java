@@ -5,21 +5,44 @@
  */
  
 public class Player {
-	private int playerRoundPoints;
+	private String name;
+	private int credit;
+	int points;
 	
 	public Player(){
-		playerRoundPoints = 0;
-	}
-
-	public int getPlayerRoundPoints() {
-		return playerRoundPoints;
-	}
-
-	public void setPlayerRoundPoints(int playerRoundPoints) {
-		this.playerRoundPoints = playerRoundPoints;
+		name = "Unknown";
+		credit = 0;
+		points = 0;			
 	}
 	
+	public Player(String pName, int pCredit, int pPoints){
+		name = pName;
+		credit = pCredit;
+		points = pPoints;
+	}
+	
+	public String getName(){
+		return name;
+	}
 
+	public void setName(String aName){
+		name = aName;
+	}
 	
 	
+	public int getCredit() {
+		return credit;
+	}
+
+	public void setCredit(int playerRoundPoints) {
+		this.credit = playerRoundPoints;
+	}
+	
+	public int getPlayerRoundPoints(){
+		return points;
+	}
+	
+	public void setPlayerRoundPoints(int p){
+		points = p;
+	}	
 }
