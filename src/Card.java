@@ -15,7 +15,7 @@ public class Card {
 		this.suit = suit;
 	}
 	
-	public Face getFaceValue() {
+	public Face getFaceName() {
 		return faceValue;
 	}
 	
