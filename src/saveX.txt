@@ -1,0 +1,4 @@
+Adam 500
+Bertil 300
+Eva 350
+Maria 600
