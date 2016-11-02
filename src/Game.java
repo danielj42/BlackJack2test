@@ -458,7 +458,7 @@ public class Game {
 	
 	// i väntan på en fungerande SaveAndLoad klass
 	public void saveToFile() throws IOException{
-		File file = new File("src/save.txt");
+		File file = new File("src/saveX.txt");
 		Iterator<Player> pIterator = players.iterator();
 		
 		
