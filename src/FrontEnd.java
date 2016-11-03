@@ -177,7 +177,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 				playerButtons.add(stand);
 				playerButtons.add(split);
 			playerCol.add(playerTitle);
-			
 
 		placeChips(satsning);	//lägger ut grafik för spelmarker
 
@@ -242,12 +241,12 @@ public class FrontEnd extends JFrame implements ActionListener{
 	//Drar ett nytt kort och ändrar grafik, summerar poängvärde
 	public void drawCard(String whichPlayer, Iterator cardIterator, JLabel cImg, int cPoints, JLabel cPointsText) {
 		Card aCard = (Card) cardIterator.next();
-	    Image cImage = new ImageIcon("src/cardimages/" + aCard.getFaceValue() + aCard.getSuit() + ".png").getImage();
+	    Image cImage = new ImageIcon("src/cardimages/" + aCard.getFaceName() + aCard.getSuit() + ".png").getImage();
 		cImg.setIcon(new ImageIcon(getScaledImage(cImage, cardImageW, cardImageH)));
-		String currentCardName = "" + aCard.getFaceValue();
+		String currentCardName = "" + aCard.getFaceName();
 		
 		if (whichPlayer.equals("dealer")) {
-			dealerPoints += addValue(currentCardName);
+			dealerPoints += aCard.getFaceName().getFaceValue();
 //			System.out.println(Enum.valueOf(Face.class, currentCardName));	//Denna ska visa en siffra (int) inte namnet posten i enumen
 //			dealerPoints += Enum.valueOf(Face.class, currentCardName);
 			
@@ -260,12 +259,12 @@ public class FrontEnd extends JFrame implements ActionListener{
 				dealerPointsLabel.setText(Integer.toString(dealerPointsAce) + " / " + Integer.toString(dealerPoints));
 			}
 			else if (dealerAceNo > 0) {
-				dealerPointsAce += addValue(currentCardName);
+				dealerPointsAce += aCard.getFaceName().getFaceValue();
 				dealerPointsLabel.setText(Integer.toString(dealerPointsAce) + " / " + Integer.toString(dealerPoints));
 			}
 		} 
 		else if (whichPlayer.equals("player1")){
-			playerPoints += addValue(currentCardName);
+			playerPoints += aCard.getFaceName().getFaceValue();
 			
 			if (currentCardName.equals("ESS") == false && playerAceNo == 0) {
 				playerPointsRow.setText(Integer.toString(playerPoints));
@@ -276,7 +275,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 				playerPointsRow.setText(Integer.toString(playerPointsAce) + " / " + Integer.toString(playerPoints));
 			}
 			else if (playerAceNo > 0) {
-				playerPointsAce += addValue(currentCardName);
+				playerPointsAce += aCard.getFaceName().getFaceValue(); //addValue(currentCardName);
 				playerPointsRow.setText(Integer.toString(playerPointsAce) + " / " + Integer.toString(playerPoints));
 			}
 		}
@@ -320,11 +319,11 @@ public class FrontEnd extends JFrame implements ActionListener{
 		}
 		
 		if (e.getSource() == nSpel){
-//			try {
-//				startNewGame();
-//			} catch (IOException e1) {
-//				e1.printStackTrace();
-//			}
+			try {
+				startNewGame();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 		if (e.getSource() == titel) {
@@ -334,39 +333,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 		if (e.getSource() == avsluta) {
 			System.exit(0);
 		}
-	}
-	
-	public int addValue(String sFace) {	//Placeholder
-		int points = 0;
-		
-		if (sFace.equals("TVÅ")){
-			points = 2;
-		} else if (sFace.equals("TRE")){
-			points = 3;
-		} else if (sFace.equals("FYRA")){
-			points = 4;
-		} else if (sFace.equals("FEM")){
-			points = 5;
-		} else if (sFace.equals("SEX")){
-			points = 6;
-		} else if (sFace.equals("SJU")){
-			points = 7;
-		} else if (sFace.equals("ÅTTA")){
-			points = 8;
-		} else if (sFace.equals("NIO")){
-			points = 9;
-		} else if (sFace.equals("TIO")){
-			points = 10;
-		} else if (sFace.equals("KNEKT")){
-			points = 10;
-		} else if (sFace.equals("DAM")){
-			points = 10;
-		} else if (sFace.equals("KUNG")){
-			points = 10;
-		} else if (sFace.equals("ESS")){
-			points = 11;
-		}
-		return points;
 	}
 	
 	//Metod för att bestämma vem som vann
@@ -388,15 +354,15 @@ public class FrontEnd extends JFrame implements ActionListener{
 				playerLoseText();
 			} else if (playerPoints > dealerPoints){
 				winMoney();
+			} else if ((dealerPoints == 20 && playerPoints == 20) || (dealerPoints == 21 && playerPoints == 21)) {
+				likaomgang();
 			}
 		} else if (dealerPoints <= 21) {
 			playerBustText();
 		} else if (playerPoints <= 21) {
 			dealerBustText();
 			winMoney();
-		} else if ((dealerPoints == 20 && playerPoints == 20) || (dealerPoints == 21 && playerPoints == 21)) {
-			likaomgang();
-		} else if (dealerPoints > 21 && playerPoints > 21) {
+		}  else if (dealerPoints > 21 && playerPoints > 21) {
 			dealerBustText();
 			playerBustText();
 		}
@@ -417,6 +383,12 @@ public class FrontEnd extends JFrame implements ActionListener{
 			JLabel dCard3 = new JLabel();
 			dealerCardsRow.add(dCard3);
 			drawCard("dealer", cardIterator, dCard3, dealerPoints, dealerPointsLabel);
+			
+			//Dealern fortsätter dra om den blir bust med ess-poängen
+			if (dealerPoints > 21 && dealerAceNo > 0) {
+				dealerPoints = dealerPointsAce;
+				dealerAceNo = 0;
+			}
 		}
 	}
 	
@@ -549,6 +521,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		
 		int bet = moneyBet;
 		int i = 0;
+		int j = 0;
 		con.gridwidth = 1;
 		con.gridheight = 1;
 		con.gridy = 0;
@@ -559,7 +532,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		while(moneyBet > 0) {
 			con.gridx = i;
 			con.ipadx = 0;
-
+			
 			if (moneyBet >= 100) {
 				moneyBet -= 100;
 				JLabel c100 = new JLabel(new ImageIcon("src/cardimages/chip100.png"), JLabel.CENTER);
@@ -586,7 +559,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 				c.setConstraints(c1, con);
 				playerChips.add(c1);
 			}
-			con.insets = new Insets(0, -52, 0, 0);
+			con.insets = new Insets(0,-52,0,0);
 			i++;
 		}
 	}
