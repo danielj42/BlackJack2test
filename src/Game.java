@@ -119,6 +119,18 @@ public class Game {
 		++numOfPlayers;
 	}
 	
+	public int getPlayerAPoints(){
+		return playerA.getPoints();
+	}
+	public int getPlayerBPoints(){
+		return playerB.getPoints();
+	}
+	public int getPlayerCPoints(){
+		return playerC.getPoints();
+	}
+	public int getPlayerDPoints(){
+		return playerD.getPoints();
+	}
 	public boolean getHitPlayerA(){
 		return hitPlayerA;
 	}
