@@ -5,11 +5,11 @@ import java.util.Iterator;
  
 public class Deck
 {
-  private ArrayList deck;	//lista för deck
+  private ArrayList<Card> deck;	//lista för deck
  
   public Deck ()
   {
-    this.deck = new ArrayList();
+    this.deck = new ArrayList<Card>();
     for (int i=0; i<13; i++)	//13 kort
     {
       Face face = Face.values()[i];
@@ -23,11 +23,20 @@ public class Deck
  
     Collections.shuffle(deck);
  
-    Iterator cardIterator = deck.iterator();
-    while (cardIterator.hasNext())
-    {
-      Card aCard = (Card) cardIterator.next();
-      System.out.println(aCard.getFaceName() + " of " + aCard.getSuit());
-    }
+    //För Testa utskrift
+//    Iterator<Card> cardIterator = deck.iterator();
+//    while (cardIterator.hasNext())
+//    {
+//      Card aCard = (Card) cardIterator.next();
+//      //System.out.println(aCard.getFaceName() + " of " + aCard.getSuit());
+//    }
+//    
+    
+    
   }
+  
+//  public void getCard(){
+//		 int i = (int)Math.random()*(deck.size());
+//		 System.out.println("Kortet blev: "+deck.get(i));
+//	  }
 }
