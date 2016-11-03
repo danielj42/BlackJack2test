@@ -27,7 +27,7 @@ public class Deck
     while (cardIterator.hasNext())
     {
       Card aCard = (Card) cardIterator.next();
-      System.out.println(aCard.getFaceValue() + " of " + aCard.getSuit());
+      System.out.println(aCard.getFaceName() + " of " + aCard.getSuit());
     }
   }
 }
