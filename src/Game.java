@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class Game {
 	
-	private List<Card> deck = new ArrayList<Card>();	// Deck, så länge klassen Deck inte klart	
+//	private List<Card> deck = new ArrayList<Card>();	// Deck, så länge klassen Deck inte klart	
 	private List<Card> playerCardsA = new ArrayList<Card>();// Om det är mer än en spelare, får de varsin ArrayList av kort
 	private List<Card> playerCardsB = new ArrayList<Card>();
 	private List<Card> playerCardsC = new ArrayList<Card>();
@@ -19,7 +19,7 @@ public class Game {
 	private List<Card> dealerCards = new ArrayList<Card>();	// dealers kort
 	private List<Player> players = new ArrayList<Player>(); // spelarnas uppgifter sparas här.
 	
-	
+	private Deck deck = new Deck();
 	private String version = "1.1";	// 1.1, 1.2, etc
 	private Player playerA;
 	private Player playerB;
@@ -57,7 +57,7 @@ public class Game {
 	// Konstruktorn
 	public Game(){						
 
-		fillDeck();
+//		fillDeck();
 		
 		try {
 			loadFromFile();
@@ -131,6 +131,9 @@ public class Game {
 	public int getPlayerDPoints(){
 		return playerD.getPoints();
 	}
+	public int getDealerPoints(){
+		return dealer.getPoints();
+	}
 	public boolean getHitPlayerA(){
 		return hitPlayerA;
 	}
@@ -157,7 +160,7 @@ public class Game {
 	}
 	
 	
-	// så länge klassen Deck inte klart
+/* så länge klassen Deck inte klart
 	public void fillDeck(){
 		for(Suit suit: Suit.values()){		
 			for(Face face: Face.values()){
@@ -172,6 +175,7 @@ public class Game {
 		deck.clear();
 		fillDeck();
 	}
+*/	
 	public void resetPlayerCardsA(){
 		playerCardsA.clear();
 	}
@@ -227,11 +231,12 @@ public class Game {
 			++lastDealerCardIndex;
 			String tmpString;
 			
-			dealerCards.add(lastDealerCardIndex, deck.get(0));
-			tmpString = deck.get(0).getFaceName() + deck.get(0).getSuit().name();
-			dealer.updatePoints(deck.get(0).getFaceName().getFaceValue()); 
+			Card card = deck.getCard();
+			dealerCards.add(lastDealerCardIndex, card);
+			tmpString = card.getFaceName() + card.getSuit().name();
+			dealer.updatePoints(card.getFaceName().getFaceValue()); 
 			
-			deck.remove(0);
+//			deck.remove(0);
 			return tmpString;
 		}
 		else
@@ -242,21 +247,23 @@ public class Game {
 		++lastPlayerACardIndex;
 		String tmpString;
 		
-		playerCardsA.add(lastPlayerACardIndex, deck.get(0));
-		tmpString = deck.get(0).getFaceName() + deck.get(0).getSuit().name();
-		playerA.updatePoints(deck.get(0).getFaceName().getFaceValue());
-		deck.remove(0);		
+		Card card = deck.getCard();
+		playerCardsA.add(lastPlayerACardIndex, card);
+		tmpString = card.getFaceName() + card.getSuit().name();
+		playerA.updatePoints(card.getFaceName().getFaceValue());
+//		deck.remove(0);		
 		return tmpString;
 	}
 	
-	public String dealCardToPlayerB(){
+	public String dealCardToPlayerB(){		
 		++lastPlayerBCardIndex;
 		String tmpString;
 		
-		playerCardsB.add(lastPlayerBCardIndex, deck.get(0));
-		tmpString = deck.get(0).getFaceName() + deck.get(0).getSuit().name();
-		playerB.updatePoints(deck.get(0).getFaceName().getFaceValue());
-		deck.remove(0);		
+		Card card = deck.getCard();
+		playerCardsB.add(lastPlayerBCardIndex, card);
+		tmpString = card.getFaceName() + card.getSuit().name();
+		playerB.updatePoints(card.getFaceName().getFaceValue());
+//		deck.remove(0);		
 		return tmpString;
 	}
 	
@@ -264,10 +271,11 @@ public class Game {
 		++lastPlayerCCardIndex;
 		String tmpString;
 		
-		playerCardsC.add(lastPlayerCCardIndex, deck.get(0));
-		tmpString = deck.get(0).getFaceName() + deck.get(0).getSuit().name();
-		playerC.updatePoints(deck.get(0).getFaceName().getFaceValue());
-		deck.remove(0);		
+		Card card = deck.getCard();
+		playerCardsC.add(lastPlayerCCardIndex, card);
+		tmpString = card.getFaceName() + card.getSuit().name();
+		playerC.updatePoints(card.getFaceName().getFaceValue());
+//		deck.remove(0);		
 		return tmpString;
 	}
 	
@@ -275,10 +283,11 @@ public class Game {
 		++lastPlayerDCardIndex;
 		String tmpString;
 		
-		playerCardsD.add(lastPlayerDCardIndex, deck.get(0));
-		tmpString = deck.get(0).getFaceName() + deck.get(0).getSuit().name();
-		playerD.updatePoints(deck.get(0).getFaceName().getFaceValue());
-		deck.remove(0);		
+		Card card = deck.getCard();
+		playerCardsD.add(lastPlayerACardIndex, card);
+		tmpString = card.getFaceName() + card.getSuit().name();
+		playerD.updatePoints(card.getFaceName().getFaceValue());
+//		deck.remove(0);		
 		return tmpString;
 	}
 	
@@ -512,7 +521,7 @@ public class Game {
 	
 	// ********TESTER********
 	
-	public void deckTest(){
+/*	public void deckTest(){
 		Iterator<Card> dIterator = deck.iterator();
 		while(dIterator.hasNext()){
 			Card c = (Card) dIterator.next();
@@ -520,7 +529,7 @@ public class Game {
 		}
 		
 	}
-	
+*/	
 	public void playersTest(){
 		Iterator<Player> pIterator = players.iterator();
 		while(pIterator.hasNext()){
