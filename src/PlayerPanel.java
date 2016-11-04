@@ -44,7 +44,7 @@ public class PlayerPanel extends JPanel{
 	JLabel playerPointsRow = new JLabel(Integer.toString(playerPoints), JLabel.CENTER);
 	JLabel playerBet = new JLabel(Integer.toString(bet) + " kr", JLabel.CENTER);
 	JPanel playerButtons = new JPanel();
-	JLabel playerTitle = new JLabel("Spelare 1", JLabel.CENTER); //Byt ut
+	JLabel playerTitle = new JLabel("Spelare 1", JLabel.CENTER);
 	JLabel pCard1 = new JLabel();
 	JLabel pCard2 = new JLabel();
 	JPanel playerChips = new JPanel();
@@ -212,12 +212,12 @@ public class PlayerPanel extends JPanel{
  	}
  	
  	public void setPlayerWinText() {
- 		playerTitle.setText("Spelare " + playerNumber + " vann " + bet * 2 + " kronor! Hen har nu " + (sAL.getMoney() + bet * 2) + " kr");
+ 		playerTitle.setText("Spelare " + playerNumber + " vann " + bet * 2 + " kronor!"); //Hen har nu " + (sAL.getMoney() + bet * 2) + " kr");
 		playerTitle.setForeground(Color.yellow);
  	}
  	
  	public void setPlayerLikaomgangText() throws IOException{
- 		playerTitle.setText("Spelare " + playerNumber + " likaomgång. Hen har nu " + (sAL.getMoney() + bet) + " kr");
+ 		playerTitle.setText("Spelare " + playerNumber + " likaomgång"); //Hen har nu " + (sAL.getMoney() + bet) + " kr");
  		playerTitle.setForeground(Color.white);	
  		int kassa = sAL.getMoney();
  		sAL.setMoney(bet + kassa);
@@ -287,6 +287,7 @@ public class PlayerPanel extends JPanel{
  	
  	public void setPlayerNumber(int n) {
  		playerNumber = n;
+ 		playerTitle.setText("Spelare " + n);
  	}
  	
  	public void setCardImageW(int width) {
@@ -295,5 +296,11 @@ public class PlayerPanel extends JPanel{
  	
  	public void setCardImageH(int height) {
  		this.cardImageH = height;
+ 	}
+ 	
+ 	public void setPlayerBlackJack() {
+		playerStands = true;
+		playerTitle.setText("Spelare " + playerNumber + " Black Jack!");
+		playerTitle.setForeground(Color.BLACK);
  	}
 }

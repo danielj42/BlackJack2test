@@ -35,8 +35,8 @@ public class FrontEnd extends JFrame implements ActionListener{
 	SaveAndLoad sAL = new SaveAndLoad();
 	
 	int highestPlayerPoints = 0;
-	int currentPlayer = 1;
 	int numberOfPlayers = 4;	//Denna variabel ändras för antal spelare man vill ha med i spelet (1-4)
+	int currentPlayer = numberOfPlayers;
 	int dealerPoints = 0;		//OBS: Dessa är placeholders för nuvarande spelares poäng. Måste hämtas med getters
 	int dealerPointsAce = 0;
 	int dealerAceNo = 0;
@@ -71,6 +71,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 	JLabel dealerCondition = new JLabel("Kondition", JLabel.CENTER);
 	JLabel dCard1 = new JLabel();
 	JLabel dCard2 = new JLabel();
+	JLabel cardShoeLabel = new JLabel(new ImageIcon());
 	
 	//kontainers och komponenter till middlespace
 	JLabel infoText = new JLabel("Dealern drar till 16 och måste stanna på 17", JLabel.CENTER);
@@ -94,7 +95,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 
 	
 	public FrontEnd() throws IOException{	
-		
 		//Satsa pengar
 //		betQuestion();
 		
@@ -104,6 +104,10 @@ public class FrontEnd extends JFrame implements ActionListener{
 		//Cardback till andra kortet
 	    Image c2 = new ImageIcon("src/cardimages/CARDBACK.jpg").getImage();
 		dCard2.setIcon(new ImageIcon(getScaledImage(c2, cardImageW, cardImageH)));
+		
+		//Kortsko grafiskt element
+	    Image cardShoe = new ImageIcon("src/cardimages/cardshoe.png").getImage();
+		cardShoeLabel.setIcon(new ImageIcon(getScaledImage(cardShoe, cardImageH, cardImageH)));
 
 		setTitle("Black Jack - Team 2");
 		
@@ -116,6 +120,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		divider.setAlignmentY(BOTTOM_ALIGNMENT);
 		infoText.setAlignmentX(CENTER_ALIGNMENT);
 		dealerCardSpace.setLayout(new BorderLayout());
+		dealerSpace.setLayout(new BorderLayout());
 		
 		//Lägger till meny
 		add(superBody);
@@ -134,12 +139,14 @@ public class FrontEnd extends JFrame implements ActionListener{
 			body.add(middleSpace, BorderLayout.CENTER);
 			body.add(playerSpace, BorderLayout.SOUTH);
 		
-		dealerSpace.add(dealerCardSpace);
+		dealerSpace.add(dealerCardSpace, BorderLayout.CENTER);
 			dealerCardSpace.add(dealerCardsRow, BorderLayout.NORTH);
 				dealerCardsRow.add(dCard1);
 				dealerCardsRow.add(dCard2);
 			dealerCardSpace.add(dealerPointsRow, BorderLayout.CENTER);
 				dealerPointsRow.add(dealerPointsLabel);
+		dealerSpace.add(cardShoeLabel, BorderLayout.EAST);
+		cardShoeLabel.setAlignmentX(LEFT_ALIGNMENT);
 				
 		playerSpace.add(spelarPanel);	//Lägger till spelarpanel
 		spelarPanel.setCardImageW(cardImageW);
@@ -159,9 +166,9 @@ public class FrontEnd extends JFrame implements ActionListener{
 			spelarPanel2.playerButtons.add(hit2);
 			spelarPanel2.playerButtons.add(stand2);
 			spelarPanel2.playerButtons.add(split2);
-			stand2.addActionListener(this);	//lyssnare till knappen "stand"
-			hit2.addActionListener(this);	//lyssnare till knappen "hit"
-			split2.setEnabled(false);	//Inaktiverar splitknappen
+			stand2.addActionListener(this);	//lyssnare till knappen "stand2"
+			hit2.addActionListener(this);	//lyssnare till knappen "hit2"
+			split2.setEnabled(false);	//Inaktiverar splitknappen2
 			stand2.setVisible(false);
 			hit2.setVisible(false);
 			split2.setVisible(false);
@@ -175,9 +182,9 @@ public class FrontEnd extends JFrame implements ActionListener{
 			spelarPanel3.playerButtons.add(hit3);
 			spelarPanel3.playerButtons.add(stand3);
 			spelarPanel3.playerButtons.add(split3);
-			stand3.addActionListener(this);	//lyssnare till knappen "stand"
-			hit3.addActionListener(this);	//lyssnare till knappen "hit"
-			split3.setEnabled(false);	//Inaktiverar splitknappen
+			stand3.addActionListener(this);	//lyssnare till knappen "stand3"
+			hit3.addActionListener(this);	//lyssnare till knappen "hit3"
+			split3.setEnabled(false);	//Inaktiverar splitknappen3
 			stand3.setVisible(false);
 			hit3.setVisible(false);
 			split3.setVisible(false);
@@ -191,9 +198,9 @@ public class FrontEnd extends JFrame implements ActionListener{
 			spelarPanel4.playerButtons.add(hit4);
 			spelarPanel4.playerButtons.add(stand4);
 			spelarPanel4.playerButtons.add(split4);
-			stand4.addActionListener(this);	//lyssnare till knappen "stand"
-			hit4.addActionListener(this);	//lyssnare till knappen "hit"
-			split4.setEnabled(false);	//Inaktiverar splitknappen
+			stand4.addActionListener(this);	//lyssnare till knappen "stand4"
+			hit4.addActionListener(this);	//lyssnare till knappen "hit4"
+			split4.setEnabled(false);	//Inaktiverar splitknappen4
 			stand4.setVisible(false);
 			hit4.setVisible(false);
 			split4.setVisible(false);
@@ -224,16 +231,43 @@ public class FrontEnd extends JFrame implements ActionListener{
 		divider.setOpaque(true);
 		dealerCondition.setBackground(Color.decode("0x00B000"));
 		dealerCondition.setOpaque(true);
+		cardShoeLabel.setBackground(Color.decode("0x00B000"));
+		cardShoeLabel.setOpaque(true);
 		
 		setSize(1200, 900);
 		setVisible(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		//Om man får 21 poäng (Black Jack) "vinner" man direkt. gör om denna för två+ spelare
-//		if (playerPoints == 21) {
-//			dealerDraw();
-//			determineWinner();
-//		}
+		if (spelarPanel.getPlayerPoints() == 21) {	//Lägger till antal spelare som är klara om de får Black Jack direkt
+			spelarPanel.setPlayerBlackJack();
+			hit.setVisible(false);
+			stand.setVisible(false);
+			split.setVisible(false);
+			noOfPlayersOut += 1;
+		}
+		if (spelarPanel2.getPlayerPoints() == 21) {
+			spelarPanel2.setPlayerBlackJack();
+			hit2.setVisible(false);
+			stand2.setVisible(false);
+			split2.setVisible(false);
+			noOfPlayersOut += 1;
+		}
+		if (spelarPanel3.getPlayerPoints() == 21) {
+			spelarPanel3.setPlayerBlackJack();
+			hit3.setVisible(false);
+			stand3.setVisible(false);
+			split3.setVisible(false);
+			noOfPlayersOut += 1;
+		}
+		if (spelarPanel4.getPlayerPoints() == 21) {
+			spelarPanel4.setPlayerBlackJack();
+			hit4.setVisible(false);
+			stand4.setVisible(false);
+			split4.setVisible(false);
+			noOfPlayersOut += 1;
+		}
+		
+		goToNextPlayer(); //Så att programmet hoppar förbi spelare som får Black Jack direkt
 	}
 	
 	//Metod för att ändra storlek på en bild
