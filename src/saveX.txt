@@ -2,3 +2,5 @@ Adam 500
 Bertil 300
 Eva 350
 Maria 600
+Elias 1000
+Eliza 1000

@@ -21,10 +21,10 @@ public class Game {
 	
 	private Deck deck = new Deck();
 	private String version = "1.1";	// 1.1, 1.2, etc
-	private Player playerA;
-	private Player playerB;
-	private Player playerC;
-	private Player playerD;
+	private Player playerA = new Player();
+	private Player playerB = new Player();
+	private Player playerC = new Player();
+	private Player playerD = new Player();
 	private Player dealer = new Player();
 	private int numOfPlayers = 0;	// antal spelare i spelet som spelar samtidigt
 	private int lastDealerCardIndex = -1;
@@ -95,28 +95,26 @@ public class Game {
 				
 				switch(c){
 				case('A'):
-					playerA = new Player();
-					playerA.setName(p.getName());
-					playerA.setCredit(p.getCredit());
+					playerA = p;
 					break;
 				case('B'):
-					playerB = new Player();
-					playerB.setName(p.getName());
-					playerB.setCredit(p.getCredit());
+					playerB = p;					
 					break;
 				case('C'):
-					playerC = new Player();
-					playerC.setName(p.getName());
-					playerC.setCredit(p.getCredit());
+					playerC = p;					
 					break;
 				case('D'):
-					playerD = new Player();
-					playerD.setName(p.getName());
-					playerD.setCredit(p.getCredit());	
+					playerD = p;						
 				}
 			}			
 		}
 		++numOfPlayers;
+	}
+	
+	public void addPlayerToList(String name, int credit) throws IOException{
+		Player p = new Player(name, credit, 0);
+		players.add(p);
+		saveToFile();
 	}
 	
 	public int getPlayerAPoints(){
@@ -250,7 +248,7 @@ public class Game {
 		Card card = deck.getCard();
 		playerCardsA.add(lastPlayerACardIndex, card);
 		tmpString = card.getFaceName() + card.getSuit().name();
-		playerA.updatePoints(card.getFaceName().getFaceValue());
+		playerA.updatePoints(card.getFaceName().getFaceValue());	//?????
 //		deck.remove(0);		
 		return tmpString;
 	}
@@ -492,7 +490,9 @@ public class Game {
 			
 		while(pIterator.hasNext()){
 			Player p = (Player) pIterator.next();			
-			bw.write(p.getName() + " " + Integer.toString(p.getCredit()) + "\n");					
+			bw.write(p.getName() + " " + Integer.toString(p.getCredit()));
+			if(pIterator.hasNext())
+				bw.write("\n");
 		}
 		bw.close();
 				
@@ -534,7 +534,7 @@ public class Game {
 		Iterator<Player> pIterator = players.iterator();
 		while(pIterator.hasNext()){
 			Player p = (Player) pIterator.next();
-			System.out.println(p.getName() + " " + p.getCredit());
+			System.out.println(p.getName() + " " + p.getCredit() + " " + p.getPoints() + " " + p.getbet());
 		}
 		
 	}
@@ -543,7 +543,7 @@ public class Game {
 		Iterator<Card> pIterator = playerCardsA.iterator();
 		while(pIterator.hasNext()){
 			Card c = (Card) pIterator.next();
-			System.out.println(c.getFaceName().getFaceValue() + c.getSuit().name());
+			System.out.println(c.getFaceName() + c.getSuit().name());
 		}
 		
 	}

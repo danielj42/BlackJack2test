@@ -21,6 +21,7 @@ public class Player {
 		name = pName;
 		credit = pCredit;
 		points = pPoints;
+		bet = 0;
 	}
 	
 	public String getName(){
