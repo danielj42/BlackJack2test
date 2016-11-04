@@ -39,7 +39,7 @@ public class PlayerPanel extends JPanel{
 	Random random = new Random();
 	
 	//subpaneler och komponenter till playerspace
-	JPanel playerCol = new JPanel(); //OBS!! testversion med bara en kolumn!!! Skall itereras för varje spelare vid fler spelare
+	JPanel playerCol = new JPanel();
 	JPanel playerCards = new JPanel();
 	JLabel playerPointsRow = new JLabel(Integer.toString(playerPoints), JLabel.CENTER);
 	JLabel playerBet = new JLabel(Integer.toString(bet) + " kr", JLabel.CENTER);
@@ -212,12 +212,12 @@ public class PlayerPanel extends JPanel{
  	}
  	
  	public void setPlayerWinText() {
- 		playerTitle.setText("Spelare " + playerNumber + " vann " + bet * 2 + " kronor! Hen har nu " + (sAL.getMoney() + bet * 2) + " kr i kassan");
+ 		playerTitle.setText("Spelare " + playerNumber + " vann " + bet * 2 + " kronor! Hen har nu " + (sAL.getMoney() + bet * 2) + " kr");
 		playerTitle.setForeground(Color.yellow);
  	}
  	
  	public void setPlayerLikaomgangText() throws IOException{
- 		playerTitle.setText("Spelare " + playerNumber + " likaomgång. Spelaren får tillbaka sin insats, har nu " + (sAL.getMoney() + bet) + " i kassan");
+ 		playerTitle.setText("Spelare " + playerNumber + " likaomgång. Hen har nu " + (sAL.getMoney() + bet) + " kr");
  		playerTitle.setForeground(Color.white);	
  		int kassa = sAL.getMoney();
  		sAL.setMoney(bet + kassa);
@@ -244,6 +244,8 @@ public class PlayerPanel extends JPanel{
  	
  	public void setPlayerStands(boolean stands) {
  		playerStands = stands;
+ 		playerTitle.setText("Spelare " + playerNumber + " stands");
+ 		playerTitle.setForeground(Color.blue);
  	}
  	
  	public boolean getPlayerIsBust() {
@@ -263,7 +265,7 @@ public class PlayerPanel extends JPanel{
 					setPlayerLoseText();
 				} else if (playerPoints > dealerPoints){
 					setPlayerWinText();
-		//				winMoney();
+	//				winMoney();
 				} else if ((dealerPoints == 20 && playerPoints == 20) || (dealerPoints == 21 && playerPoints == 21)) {
 					try {
 						setPlayerLikaomgangText();
