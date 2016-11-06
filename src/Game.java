@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class Game {
-	
-//	private List<Card> deck = new ArrayList<Card>();	// Deck, så länge klassen Deck inte klart	
+public class Game {	
+
 	private List<Card> playerCardsA = new ArrayList<Card>();// Om det är mer än en spelare, får de varsin ArrayList av kort
 	private List<Card> playerCardsB = new ArrayList<Card>();
 	private List<Card> playerCardsC = new ArrayList<Card>();
@@ -37,14 +36,20 @@ public class Game {
 	private boolean playerBWinner = false;
 	private boolean playerCWinner = false;
 	private boolean playerDWinner = false;
-	private boolean dealerWinner = false;
+	private boolean dealerWinsPlayerA = false;
+	private boolean dealerWinsPlayerB = false;
+	private boolean dealerWinsPlayerC = false;
+	private boolean dealerWinsPlayerD = false;
 	private boolean blackjack = false;	// om någon av spelarna eller dealer får blackjack
 	private boolean blackjackDealer = false; // om dealer får blackjack
 	private boolean blackjackPlayerA = false;
 	private boolean blackjackPlayerB = false;
 	private boolean blackjackPlayerC = false;
 	private boolean blackjackPlayerD = false;
-	private boolean draw = false;	//oavgjord
+	private boolean drawPlayerA = false;	//oavgjord
+	private boolean drawPlayerB = false;
+	private boolean drawPlayerC = false;
+	private boolean drawPlayerD = false;
 	private boolean hitPlayerA = true;
 	private boolean hitPlayerB = true;
 	private boolean hitPlayerC = true;
@@ -55,9 +60,7 @@ public class Game {
 	private boolean stayPlayerD = false;
 	
 	// Konstruktorn
-	public Game(){						
-
-//		fillDeck();
+	public Game(){
 		
 		try {
 			loadFromFile();
@@ -110,8 +113,8 @@ public class Game {
 		}
 		++numOfPlayers;
 	}
-	
-	public void addPlayerToList(String name, int credit) throws IOException{
+	// Har ändrat namnet från addPlayerToList till addNewPlayer
+	public void addNewPlayer(String name, int credit) throws IOException{
 		Player p = new Player(name, credit, 0);
 		players.add(p);
 		saveToFile();
@@ -155,25 +158,8 @@ public class Game {
 	}
 	public void setHitPlayerD(boolean h){
 		hitPlayerD = h;
-	}
-	
-	
-/* så länge klassen Deck inte klart
-	public void fillDeck(){
-		for(Suit suit: Suit.values()){		
-			for(Face face: Face.values()){
-				Card tempCard = new Card(face, suit);
-				deck.add(tempCard);
-			}					
-		}
-		Collections.shuffle(deck);		
-	}
-	
-	public void resetDeck(){
-		deck.clear();
-		fillDeck();
-	}
-*/	
+	}	
+
 	public void resetPlayerCardsA(){
 		playerCardsA.clear();
 	}
@@ -195,8 +181,17 @@ public class Game {
 	public int getNumOfPlayers(){
 		return numOfPlayers;
 	}		
-	public boolean checkDraw(){
-		return draw;
+	public boolean checkDrawPlayerA(){
+		return drawPlayerA;
+	}	
+	public boolean checkDrawPlayerB(){
+		return drawPlayerB;
+	}	
+	public boolean checkDrawPlayerC(){
+		return drawPlayerC;
+	}	
+	public boolean checkDrawPlayerD(){
+		return drawPlayerD;
 	}	
 	public int getBetPlayerA(){
 		return playerA.getbet();
@@ -232,9 +227,8 @@ public class Game {
 			Card card = deck.getCard();
 			dealerCards.add(lastDealerCardIndex, card);
 			tmpString = card.getFaceName() + card.getSuit().name();
-			dealer.updatePoints(card.getFaceName().getFaceValue()); 
-			
-//			deck.remove(0);
+			dealer.updatePoints(card.getFaceName().getFaceValue()); 			
+
 			return tmpString;
 		}
 		else
@@ -248,8 +242,8 @@ public class Game {
 		Card card = deck.getCard();
 		playerCardsA.add(lastPlayerACardIndex, card);
 		tmpString = card.getFaceName() + card.getSuit().name();
-		playerA.updatePoints(card.getFaceName().getFaceValue());	//?????
-//		deck.remove(0);		
+		playerA.updatePoints(card.getFaceName().getFaceValue());
+		
 		return tmpString;
 	}
 	
@@ -261,7 +255,7 @@ public class Game {
 		playerCardsB.add(lastPlayerBCardIndex, card);
 		tmpString = card.getFaceName() + card.getSuit().name();
 		playerB.updatePoints(card.getFaceName().getFaceValue());
-//		deck.remove(0);		
+		
 		return tmpString;
 	}
 	
@@ -273,7 +267,7 @@ public class Game {
 		playerCardsC.add(lastPlayerCCardIndex, card);
 		tmpString = card.getFaceName() + card.getSuit().name();
 		playerC.updatePoints(card.getFaceName().getFaceValue());
-//		deck.remove(0);		
+		
 		return tmpString;
 	}
 	
@@ -285,13 +279,25 @@ public class Game {
 		playerCardsD.add(lastPlayerACardIndex, card);
 		tmpString = card.getFaceName() + card.getSuit().name();
 		playerD.updatePoints(card.getFaceName().getFaceValue());
-//		deck.remove(0);		
+		
 		return tmpString;
 	}
 	
-	public boolean hasDealerWon(){
+	public boolean hasDealerWinsPlayerA(){
 		checkWinner();
-		return dealerWinner;
+		return dealerWinsPlayerA;
+	}	
+	public boolean hasDealerWinsPlayerB(){
+		checkWinner();
+		return dealerWinsPlayerB;
+	}	
+	public boolean hasDealerWinsPlayerC(){
+		checkWinner();
+		return dealerWinsPlayerC;
+	}	
+	public boolean hasDealerWinsPlayerD(){
+		checkWinner();
+		return dealerWinsPlayerD;
 	}	
 	public boolean hasPlayerAWon(){
 		checkWinner();
@@ -308,158 +314,175 @@ public class Game {
 	public boolean hasPlayerDWon(){
 		checkWinner();
 		return playerDWinner;
-	}	
+	}		
 	
-	// så länge antar vi att det är max två spelare
-	public void checkBlackjack(){
+	public void checkBlackjack(){		
 		
-		if(numOfPlayers == 2){
-			if(playerB.getPoints() == 21 && playerCardsB.size() < 3 ){ 
-				playerBWinner = true;
-				// BlackJack!!!
-				blackjackPlayerB = true;
-				blackjack = true;
-				playerB.winBlackjack();
-			}
-		}
-		
-		else if(playerA.getPoints() == 21 && playerCardsA.size() < 3 ){ 
-			playerAWinner = true;
-			// BlackJack!!!
+		if(playerA.getPoints() == 21 && playerCardsA.size() < 3 ){ 
+			playerAWinner = true;			
 			blackjackPlayerA = true;
 			blackjack = true;
-			playerA.winBlackjack();
+			playerA.winBlackjack();	// får vinst med (3/2 * bet)
+		}		
+		else if(playerB.getPoints() == 21 && playerCardsB.size() < 3 ){ 
+			playerBWinner = true;			
+			blackjackPlayerB = true;
+			blackjack = true;
+			playerB.winBlackjack();
 		}
-		
+		else if(playerC.getPoints() == 21 && playerCardsC.size() < 3 ){ 
+			playerCWinner = true;			
+			blackjackPlayerC = true;
+			blackjack = true;
+			playerC.winBlackjack();
+		}
+		else if(playerD.getPoints() == 21 && playerCardsD.size() < 3 ){ 
+			playerDWinner = true;			
+			blackjackPlayerD = true;
+			blackjack = true;
+			playerD.winBlackjack();
+		}		
 		else if(dealer.getPoints() == 21 &&dealerCards.size() < 3 ){ 
-			dealerWinner = true;
-			// BlackJack!!!
+			dealerWinsPlayerA = true;
+			dealerWinsPlayerB = true;
+			dealerWinsPlayerC = true;
+			dealerWinsPlayerD = true;			
 			blackjackDealer = true;
 			blackjack = true;
 			playerA.setBet(0);
 			playerB.setBet(0);
 		}		
-	}
+	}	
 	
-	// så länge antar vi att det är max två spelare
 	private void checkWinner(){
 		
-		if(version == "1.1"){
-			if(numOfPlayers == 1){
+		if(version == "1.1"){			
 				
-				while(!blackjack && playerA.getPoints() < 22 && stayPlayerA){
+			if(!blackjackPlayerA && !stayPlayerA && !playerAWinner){
 					
-					if(playerA.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
-						playerAWinner = true;
-						playerA.winBet();
-					}
-					else if(playerA.getPoints() > dealer.getPoints() && playerA.getPoints() < 22){
-						playerAWinner = true;
-						playerA.winBet();
-					}
-					else if(playerA.getPoints() == dealer.getPoints()){
-						if(playerA.getPoints() >= 17 && playerA.getPoints() <= 19){
-							dealerWinner = true; // dealern vinner
-							playerA.setBet(0);
-						}			
-						else if(playerA.getPoints() >= 20 && playerA.getPoints() <= 21){
-							draw = true; //Oavgjort
-						}
-						
-					}
-					else if(stayPlayerA == true && dealer.getPoints() > playerA.getPoints()){
-						dealerWinner = true;
-						playerA.setBet(0);
-					}
+				if(playerA.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
+					playerAWinner = true;
+					playerA.winBet();
 				}
+				else if(playerA.getPoints() > dealer.getPoints() && playerA.getPoints() < 22){
+					playerAWinner = true;
+					playerA.winBet();
+				}
+				else if(playerA.getPoints() == dealer.getPoints()){
+					if(playerA.getPoints() >= 17 && playerA.getPoints() <= 19){
+						dealerWinsPlayerA = true; // dealer vinner mot player A
+						playerA.setBet(0);
+					}			
+					else if(playerA.getPoints() >= 20 && playerA.getPoints() <= 21){
+						drawPlayerA = true; //Oavgjort
+					}						
+				}				
+			}
+			else if(!blackjackPlayerA && stayPlayerA && !playerAWinner && dealer.getPoints() > playerA.getPoints()){
+				dealerWinsPlayerA = true;
+				playerA.setBet(0);
 			}
 			
 			
-			else if(numOfPlayers == 2){
+			if(numOfPlayers > 1){
 				
-				while(playerA.getPoints() < 22 || playerB.getPoints() < 22){
+				if(!blackjackPlayerB && !stayPlayerB && !playerBWinner){
 					
-					while(!blackjackPlayerA && playerA.getPoints() < 22 && stayPlayerA){
-						
-						if(playerA.getPoints() == 21 && (dealer.getPoints() < 21 ) || dealer.getPoints() > 21){
-							playerAWinner = true;
-							playerA.winBet();
-							
-						}
-						else if(playerA.getPoints() > dealer.getPoints() && playerA.getPoints() < 22){
-							playerAWinner = true;
-							playerA.winBet();
-						}
-						else if(playerA.getPoints() == dealer.getPoints()){
-							if(playerA.getPoints() >= 17 && playerA.getPoints() <= 19){
-								dealerWinner = true; // dealern vinner
-								playerA.setBet(0);
-							}			
-							else if(playerA.getPoints() >= 20 && playerA.getPoints() <= 21){
-								draw = true; //Oavgjort
-							}
-							
-						}
-						else if(stayPlayerA == true && dealer.getPoints() > playerA.getPoints()){
-							dealerWinner = true;
-							playerA.setBet(0);
-						}
+					if(playerB.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
+						playerBWinner = true;
+						playerB.winBet();
 					}
-					while(!blackjackPlayerB && playerB.getPoints() < 22 && stayPlayerB){
-						
-						if(playerB.getPoints() == 21 && (dealer.getPoints() < 21 ) || dealer.getPoints() > 21){
-							playerBWinner = true;
-							playerB.winBet();
-						}
-						else if(playerB.getPoints() > dealer.getPoints() && playerB.getPoints() < 22){
-							playerBWinner = true;
-							playerB.winBet();
-						}
-						else if(playerB.getPoints() == dealer.getPoints()){
-							if(playerB.getPoints() >= 17 && playerB.getPoints() <= 19){
-								dealerWinner = true; // dealern vinner
-								playerB.setBet(0);
-							}			
-							else if(playerB.getPoints() >= 20 && playerB.getPoints() <= 21){
-								draw = true; //Oavgjort
-							}
-							
-						}
-						else if(stayPlayerB == true && dealer.getPoints() > playerB.getPoints()){
-							dealerWinner = true;
-							playerA.setBet(0);
-						}
+					else if(playerB.getPoints() > dealer.getPoints() && playerB.getPoints() < 22){
+						playerBWinner = true;
+						playerB.winBet();
 					}
-					
+					else if(playerB.getPoints() == dealer.getPoints()){
+						if(playerB.getPoints() >= 17 && playerB.getPoints() <= 19){
+							dealerWinsPlayerB = true; // dealer vinner mot player B
+							playerB.setBet(0);
+						}			
+						else if(playerB.getPoints() >= 20 && playerB.getPoints() <= 21){
+							drawPlayerB = true; //Oavgjort
+						}						
+					}				
 				}
+				else if(!blackjackPlayerB && stayPlayerB && !playerBWinner && dealer.getPoints() > playerB.getPoints()){
+					dealerWinsPlayerB = true;
+					playerB.setBet(0);
+				}
+				
+			}
+
+			if(numOfPlayers > 2){
+				
+				if(!blackjackPlayerC && !stayPlayerC && !playerCWinner){
 					
+					if(playerC.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
+						playerCWinner = true;
+						playerC.winBet();
+					}
+					else if(playerC.getPoints() > dealer.getPoints() && playerC.getPoints() < 22){
+						playerCWinner = true;
+						playerC.winBet();
+					}
+					else if(playerC.getPoints() == dealer.getPoints()){
+						if(playerC.getPoints() >= 17 && playerC.getPoints() <= 19){
+							dealerWinsPlayerC = true; // dealer vinner mot player C
+							playerC.setBet(0);
+						}			
+						else if(playerC.getPoints() >= 20 && playerC.getPoints() <= 21){
+							drawPlayerC = true; //Oavgjort
+						}						
+					}				
+				}
+				else if(!blackjackPlayerC && stayPlayerC && !playerCWinner && dealer.getPoints() > playerC.getPoints()){
+					dealerWinsPlayerC = true;
+					playerC.setBet(0);
+				}
+				
+			}
+			
+			if(numOfPlayers > 3){
+				
+				if(!blackjackPlayerD && !stayPlayerD && !playerDWinner){
+					
+					if(playerD.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
+						playerDWinner = true;
+						playerD.winBet();
+					}
+					else if(playerD.getPoints() > dealer.getPoints() && playerD.getPoints() < 22){
+						playerDWinner = true;
+						playerD.winBet();
+					}
+					else if(playerD.getPoints() == dealer.getPoints()){
+						if(playerD.getPoints() >= 17 && playerD.getPoints() <= 19){
+							dealerWinsPlayerD = true; // dealer vinner mot player D
+							playerD.setBet(0);
+						}			
+						else if(playerD.getPoints() >= 20 && playerD.getPoints() <= 21){
+							drawPlayerD = true; //Oavgjort
+						}						
+					}				
+				}
+				else if(!blackjackPlayerD && stayPlayerD && !playerDWinner && dealer.getPoints() > playerD.getPoints()){
+					dealerWinsPlayerD = true;
+					playerD.setBet(0);
+				}
+				
 			}
 			
 		}
 		
 		else if(version == "1.2"){
 			// Kommer snart!
-			if(numOfPlayers == 1){
-				
-				
-			}
-			else if(numOfPlayers == 2){
-				
-				
-				
-			}
+			
+			
+			
 		}
 		else if(version == "1.3"){
 			//Kommer snart!
-			if(numOfPlayers == 1){
-				
-				
-			}
-			else if(numOfPlayers == 2){
-				
-				
-				
-			}
+			
+			
 			
 		}
 		
@@ -519,17 +542,9 @@ public class Game {
 	
 	
 	
-	// ********TESTER********
+	// **************TESTER*************************************
 	
-/*	public void deckTest(){
-		Iterator<Card> dIterator = deck.iterator();
-		while(dIterator.hasNext()){
-			Card c = (Card) dIterator.next();
-			System.out.println(c.getFaceName() + c.getSuit().name()); // tog bort .getFaceValue()
-		}
-		
-	}
-*/	
+
 	public void playersTest(){
 		Iterator<Player> pIterator = players.iterator();
 		while(pIterator.hasNext()){
