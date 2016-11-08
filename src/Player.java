@@ -33,9 +33,12 @@ public class Player {
 	public int getCredit() {
 		return credit;
 	}
-	public void setCredit(int playerRoundPoints) {
-		this.credit = playerRoundPoints;
-	}	
+	public void setCredit(int credit) {
+		this.credit = credit;
+	}
+	public void updateCredit(int c){
+		credit += c;
+	}
 	public int getPoints(){
 		return points;
 	}	
@@ -45,13 +48,15 @@ public class Player {
 	public int getbet(){
 		return bet;
 	}
-	public void setBet(int b){
-		bet = b;
-	}
-	public void bet(int b){
-		credit -= b;
-		bet = b;
-	}
+	public boolean setBet(int b){
+		if(credit > b){
+			credit -= b;
+			bet = b;
+			return true;
+		}
+		else
+			return false;
+	}	
 	public void winBet(){
 		credit += (2 * bet);
 		bet = 0;

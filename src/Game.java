@@ -17,43 +17,43 @@ public class Game {
 	private List<Card> playerCardsD = new ArrayList<Card>();
 	private List<Card> dealerCards = new ArrayList<Card>();	// dealers kort
 	private List<Player> players = new ArrayList<Player>(); // spelarnas uppgifter sparas här.
+	private List<String>blackjackWinnersName = new ArrayList<String>(); // namn på alla som vunnit blackjack
 	
 	private Deck deck = new Deck();
+	
 	private String version = "1.1";	// 1.1, 1.2, etc
+	
 	private Player playerA = new Player();
 	private Player playerB = new Player();
 	private Player playerC = new Player();
 	private Player playerD = new Player();
 	private Player dealer = new Player();
+	
 	private int numOfPlayers = 0;	// antal spelare i spelet som spelar samtidigt
 	private int lastDealerCardIndex = -1;
 	private int lastPlayerACardIndex = -1;
 	private int lastPlayerBCardIndex = -1;
 	private int lastPlayerCCardIndex = -1;
 	private int lastPlayerDCardIndex = -1;
-//	private SaveAndLoad saveAndLoad = new SaveAndLoad();
+	
 	private boolean playerAWinner = false;
 	private boolean playerBWinner = false;
 	private boolean playerCWinner = false;
 	private boolean playerDWinner = false;
+	
 	private boolean dealerWinsPlayerA = false;
 	private boolean dealerWinsPlayerB = false;
 	private boolean dealerWinsPlayerC = false;
 	private boolean dealerWinsPlayerD = false;
-	private boolean blackjack = false;	// om någon av spelarna eller dealer får blackjack
-	private boolean blackjackDealer = false; // om dealer får blackjack
-	private boolean blackjackPlayerA = false;
-	private boolean blackjackPlayerB = false;
-	private boolean blackjackPlayerC = false;
-	private boolean blackjackPlayerD = false;
+	
+	private boolean blackjack = false;	// om någon av spelarna eller dealer får blackjack	
+	private String nameOfBlackjackWinner;
+	
 	private boolean drawPlayerA = false;	//oavgjord
 	private boolean drawPlayerB = false;
 	private boolean drawPlayerC = false;
 	private boolean drawPlayerD = false;
-	private boolean hitPlayerA = true;
-	private boolean hitPlayerB = true;
-	private boolean hitPlayerC = true;
-	private boolean hitPlayerD = true;
+
 	private boolean stayPlayerA = false;
 	private boolean stayPlayerB = false;
 	private boolean stayPlayerC = false;
@@ -87,8 +87,8 @@ public class Game {
 		return nameOfPlayers;
 	}
 	
-	// Välj spelare, börja med A, B, C, D
-	public void choosePlayer(char c, String playerName){
+	// Välj spelare
+	public void choosePlayer(String playerName){
 		
 		Iterator<Player> pIterator = players.iterator();
 		
@@ -96,24 +96,24 @@ public class Game {
 			Player p = (Player) pIterator.next();
 			if(p.getName() == playerName){
 				
-				switch(c){
-				case('A'):
+				switch(numOfPlayers){
+				case(0):
 					playerA = p;
 					break;
-				case('B'):
+				case(1):
 					playerB = p;					
 					break;
-				case('C'):
+				case(2):
 					playerC = p;					
 					break;
-				case('D'):
+				case(3):
 					playerD = p;						
 				}
 			}			
 		}
 		++numOfPlayers;
 	}
-	// Har ändrat namnet från addPlayerToList till addNewPlayer
+	
 	public void addNewPlayer(String name, int credit) throws IOException{
 		Player p = new Player(name, credit, 0);
 		players.add(p);
@@ -135,31 +135,19 @@ public class Game {
 	public int getDealerPoints(){
 		return dealer.getPoints();
 	}
-	public boolean getHitPlayerA(){
-		return hitPlayerA;
+	public int getPlayerACredit(){
+		return playerA.getCredit();
 	}
-	public void setHitPlayerA(boolean h){
-		hitPlayerA = h;
+	public int getPlayerBCredit(){
+		return playerB.getCredit();
 	}
-	public boolean getHitPlayerB(){
-		return hitPlayerB;
+	public int getPlayerCCredit(){
+		return playerB.getCredit();
 	}
-	public void setHitPlayerB(boolean h){
-		hitPlayerB = h;
+	public int getPlayerDCredit(){
+		return playerD.getCredit();
 	}
-	public boolean getHitPlayerC(){
-		return hitPlayerC;
-	}
-	public void setHitPlayerC(boolean h){
-		hitPlayerC = h;
-	}
-	public boolean getHitPlayerD(){
-		return hitPlayerD;
-	}
-	public void setHitPlayerD(boolean h){
-		hitPlayerD = h;
-	}	
-
+	
 	public void resetPlayerCardsA(){
 		playerCardsA.clear();
 	}
@@ -171,6 +159,12 @@ public class Game {
 	}
 	public void resetPlayerCardsD(){
 		playerCardsD.clear();
+	}
+	public void resetDealerCards(){
+	dealerCards.clear();
+	}
+	public void resetBlackjackWinnernames(){
+		blackjackWinnersName.clear();
 	}
 	public String getVersion(){
 		return version;
@@ -196,8 +190,11 @@ public class Game {
 	public int getBetPlayerA(){
 		return playerA.getbet();
 	}
-	public void setBetPlayerA(int b){
-		playerA.setBet(b);
+	public boolean setBetPlayerA(int b){
+		if(playerA.setBet(b))
+			return true;
+		else
+			return false;
 	}
 	public int getBetPlayerB(){
 		return playerB.getbet();
@@ -217,8 +214,20 @@ public class Game {
 	public void setBetPlayerD(int b){
 		playerD.setBet(b);
 	}
+	public void setStayPlayerA(boolean b){
+		stayPlayerA = b;
+	}
+	public void setStayPlayerB(boolean b){
+		stayPlayerB = b;
+	}
+	public void setStayPlayerC(boolean b){
+		stayPlayerC = b;
+	}
+	public void setStayPlayerD(boolean b){
+		stayPlayerD = b;
+	}
 	
-	public String dealCardToDealer(){
+	public String dealToDealer(){
 		
 		if(dealer.getPoints() < 17){
 			++lastDealerCardIndex;
@@ -235,7 +244,7 @@ public class Game {
 			return "";
 	}
 	
-	public String dealCardToPlayerA(){		
+	public String dealToPlayerA(){		
 		++lastPlayerACardIndex;
 		String tmpString;
 		
@@ -247,7 +256,7 @@ public class Game {
 		return tmpString;
 	}
 	
-	public String dealCardToPlayerB(){		
+	public String dealToPlayerB(){		
 		++lastPlayerBCardIndex;
 		String tmpString;
 		
@@ -259,7 +268,7 @@ public class Game {
 		return tmpString;
 	}
 	
-	public String dealCardToPlayerC(){		
+	public String dealToPlayerC(){		
 		++lastPlayerCCardIndex;
 		String tmpString;
 		
@@ -271,7 +280,7 @@ public class Game {
 		return tmpString;
 	}
 	
-	public String dealCardToPlayerD(){		
+	public String dealToPlayerD(){		
 		++lastPlayerDCardIndex;
 		String tmpString;
 		
@@ -282,6 +291,15 @@ public class Game {
 		
 		return tmpString;
 	}
+	
+	public String[] getBlackjackWinnersName(){
+		int size = blackjackWinnersName.size();
+		String[] names = new String[size];
+		for(int i = 0; i < size; ++i){
+			names[i] = blackjackWinnersName.get(i);
+		}
+		return names;
+	}	
 	
 	public boolean hasDealerWinsPlayerA(){
 		checkWinner();
@@ -314,31 +332,35 @@ public class Game {
 	public boolean hasPlayerDWon(){
 		checkWinner();
 		return playerDWinner;
-	}		
+	}	
+	
+	public boolean isBlackjack(){
+		return blackjack;
+	}
 	
 	public void checkBlackjack(){		
 		
 		if(playerA.getPoints() == 21 && playerCardsA.size() < 3 ){ 
 			playerAWinner = true;			
-			blackjackPlayerA = true;
+			nameOfBlackjackWinner = playerA.getName();
 			blackjack = true;
 			playerA.winBlackjack();	// får vinst med (3/2 * bet)
 		}		
 		else if(playerB.getPoints() == 21 && playerCardsB.size() < 3 ){ 
 			playerBWinner = true;			
-			blackjackPlayerB = true;
+			nameOfBlackjackWinner = playerB.getName();
 			blackjack = true;
 			playerB.winBlackjack();
 		}
 		else if(playerC.getPoints() == 21 && playerCardsC.size() < 3 ){ 
 			playerCWinner = true;			
-			blackjackPlayerC = true;
+			nameOfBlackjackWinner = playerC.getName();
 			blackjack = true;
 			playerC.winBlackjack();
 		}
 		else if(playerD.getPoints() == 21 && playerCardsD.size() < 3 ){ 
 			playerDWinner = true;			
-			blackjackPlayerD = true;
+			nameOfBlackjackWinner = playerD.getName();
 			blackjack = true;
 			playerD.winBlackjack();
 		}		
@@ -347,10 +369,12 @@ public class Game {
 			dealerWinsPlayerB = true;
 			dealerWinsPlayerC = true;
 			dealerWinsPlayerD = true;			
-			blackjackDealer = true;
+			nameOfBlackjackWinner = "Dealer";	// Dealer vinner blacljack
 			blackjack = true;
 			playerA.setBet(0);
 			playerB.setBet(0);
+			playerC.setBet(0);
+			playerD.setBet(0);
 		}		
 	}	
 	
@@ -358,7 +382,7 @@ public class Game {
 		
 		if(version == "1.1"){			
 				
-			if(!blackjackPlayerA && !stayPlayerA && !playerAWinner){
+			if(stayPlayerA && !playerAWinner){
 					
 				if(playerA.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
 					playerAWinner = true;
@@ -368,6 +392,10 @@ public class Game {
 					playerAWinner = true;
 					playerA.winBet();
 				}
+				else if(dealer.getPoints() > playerA.getPoints() && dealer.getPoints() <= 21){
+					dealerWinsPlayerA = true;
+					playerA.setBet(0);
+				}
 				else if(playerA.getPoints() == dealer.getPoints()){
 					if(playerA.getPoints() >= 17 && playerA.getPoints() <= 19){
 						dealerWinsPlayerA = true; // dealer vinner mot player A
@@ -375,18 +403,15 @@ public class Game {
 					}			
 					else if(playerA.getPoints() >= 20 && playerA.getPoints() <= 21){
 						drawPlayerA = true; //Oavgjort
+						playerA.updateCredit(playerA.getbet());
 					}						
-				}				
-			}
-			else if(!blackjackPlayerA && stayPlayerA && !playerAWinner && dealer.getPoints() > playerA.getPoints()){
-				dealerWinsPlayerA = true;
-				playerA.setBet(0);
+				}			
 			}
 			
 			
 			if(numOfPlayers > 1){
 				
-				if(!blackjackPlayerB && !stayPlayerB && !playerBWinner){
+				if(stayPlayerB && !playerBWinner){
 					
 					if(playerB.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
 						playerBWinner = true;
@@ -396,6 +421,10 @@ public class Game {
 						playerBWinner = true;
 						playerB.winBet();
 					}
+					else if(dealer.getPoints() > playerB.getPoints() && dealer.getPoints() <= 21){
+						dealerWinsPlayerB = true;
+						playerB.setBet(0);
+					}
 					else if(playerB.getPoints() == dealer.getPoints()){
 						if(playerB.getPoints() >= 17 && playerB.getPoints() <= 19){
 							dealerWinsPlayerB = true; // dealer vinner mot player B
@@ -403,19 +432,16 @@ public class Game {
 						}			
 						else if(playerB.getPoints() >= 20 && playerB.getPoints() <= 21){
 							drawPlayerB = true; //Oavgjort
+							playerB.updateCredit(playerB.getbet());
 						}						
-					}				
-				}
-				else if(!blackjackPlayerB && stayPlayerB && !playerBWinner && dealer.getPoints() > playerB.getPoints()){
-					dealerWinsPlayerB = true;
-					playerB.setBet(0);
+					}			
 				}
 				
 			}
 
 			if(numOfPlayers > 2){
 				
-				if(!blackjackPlayerC && !stayPlayerC && !playerCWinner){
+				if(stayPlayerC && !playerCWinner){
 					
 					if(playerC.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
 						playerCWinner = true;
@@ -425,26 +451,27 @@ public class Game {
 						playerCWinner = true;
 						playerC.winBet();
 					}
+					else if(dealer.getPoints() > playerC.getPoints() && dealer.getPoints() <= 21){
+						dealerWinsPlayerC = true;
+						playerC.setBet(0);
+					}
 					else if(playerC.getPoints() == dealer.getPoints()){
 						if(playerC.getPoints() >= 17 && playerC.getPoints() <= 19){
 							dealerWinsPlayerC = true; // dealer vinner mot player C
 							playerC.setBet(0);
 						}			
 						else if(playerC.getPoints() >= 20 && playerC.getPoints() <= 21){
-							drawPlayerC = true; //Oavgjort
+							drawPlayerC = true; //Oavgjort 
+							playerC.updateCredit(playerC.getbet());
 						}						
-					}				
-				}
-				else if(!blackjackPlayerC && stayPlayerC && !playerCWinner && dealer.getPoints() > playerC.getPoints()){
-					dealerWinsPlayerC = true;
-					playerC.setBet(0);
+					}			
 				}
 				
 			}
 			
 			if(numOfPlayers > 3){
 				
-				if(!blackjackPlayerD && !stayPlayerD && !playerDWinner){
+				if(stayPlayerD && !playerDWinner){
 					
 					if(playerD.getPoints() == 21 && (dealer.getPoints() < 21 || dealer.getPoints() > 21)){
 						playerDWinner = true;
@@ -454,6 +481,10 @@ public class Game {
 						playerDWinner = true;
 						playerD.winBet();
 					}
+					else if(dealer.getPoints() > playerD.getPoints() && dealer.getPoints() <= 21){
+						dealerWinsPlayerD = true;
+						playerD.setBet(0);
+					}
 					else if(playerD.getPoints() == dealer.getPoints()){
 						if(playerD.getPoints() >= 17 && playerD.getPoints() <= 19){
 							dealerWinsPlayerD = true; // dealer vinner mot player D
@@ -461,12 +492,9 @@ public class Game {
 						}			
 						else if(playerD.getPoints() >= 20 && playerD.getPoints() <= 21){
 							drawPlayerD = true; //Oavgjort
+							playerD.updateCredit(playerD.getbet());
 						}						
-					}				
-				}
-				else if(!blackjackPlayerD && stayPlayerD && !playerDWinner && dealer.getPoints() > playerD.getPoints()){
-					dealerWinsPlayerD = true;
-					playerD.setBet(0);
+					}			
 				}
 				
 			}
@@ -485,6 +513,10 @@ public class Game {
 			
 			
 		}
+		
+	}
+	// Behövs det???
+	public void resetGame(){
 		
 	}
 	
