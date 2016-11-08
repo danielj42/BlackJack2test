@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 
 public class PlayerPanel extends JPanel{
 	Deck deck = new Deck();
-	SaveAndLoad sAL = new SaveAndLoad();
 	Card aCard;
 	
 	boolean playerIsBust = false;
@@ -35,6 +34,9 @@ public class PlayerPanel extends JPanel{
 	int cardCounter = 2;
 	int cardImageH = 175;
 	int cardImageW = 120;
+	boolean blackJack = false;
+	String playerName = "Spelare";
+	int playerCredit;
 	
 	Random random = new Random();
 	
@@ -201,27 +203,32 @@ public class PlayerPanel extends JPanel{
 	}
 	
  	public void setPlayerLoseText() {
- 		playerTitle.setText("Spelare " + playerNumber + " förlorade");
+ 		playerTitle.setText(playerName + " förlorade");
  		playerTitle.setForeground(Color.red);
 	
  	}
  	
  	public void setPlayerBustText() {
- 		playerTitle.setText("Spelare " + playerNumber + " BUST");
+ 		playerTitle.setText(playerName + " BUST");
  		playerTitle.setForeground(Color.red);
  	}
  	
  	public void setPlayerWinText() {
- 		playerTitle.setText("Spelare " + playerNumber + " vann " + bet * 2 + " kronor!"); //Hen har nu " + (sAL.getMoney() + bet * 2) + " kr");
-		playerTitle.setForeground(Color.yellow);
+ 		if (blackJack == false) {
+	 		playerTitle.setText(playerName + " vann " + bet * 2 + " kronor!"); //Hen har nu " + (playerCredit + bet * 2) + " kr");
+			playerTitle.setForeground(Color.yellow);
+			playerCredit += bet * 2;
+ 		} 
+ 		else {
+ 	 		playerTitle.setText(playerName + " vann " + bet * 2.5 + " kronor!"); //Hen har nu " + (playerCredit + bet * 2.5) + " kr");
+ 			playerTitle.setForeground(Color.black);
+			playerCredit += bet * 2.5;
+ 		}
  	}
  	
  	public void setPlayerLikaomgangText() throws IOException{
- 		playerTitle.setText("Spelare " + playerNumber + " likaomgång"); //Hen har nu " + (sAL.getMoney() + bet) + " kr");
- 		playerTitle.setForeground(Color.white);	
- 		int kassa = sAL.getMoney();
- 		sAL.setMoney(bet + kassa);
- 		sAL.Save();
+ 		playerTitle.setText(playerName + " likaomgång"); //Hen har nu " + (playerCredit + bet) + " kr");
+ 		playerTitle.setForeground(Color.white);
  	}
  	
  	public void setNewPlayerCard() {
@@ -244,7 +251,7 @@ public class PlayerPanel extends JPanel{
  	
  	public void setPlayerStands(boolean stands) {
  		playerStands = stands;
- 		playerTitle.setText("Spelare " + playerNumber + " stands");
+ 		playerTitle.setText(playerName + " stands");
  		playerTitle.setForeground(Color.blue);
  	}
  	
@@ -265,10 +272,10 @@ public class PlayerPanel extends JPanel{
 					setPlayerLoseText();
 				} else if (playerPoints > dealerPoints){
 					setPlayerWinText();
-	//				winMoney();
 				} else if ((dealerPoints == 20 && playerPoints == 20) || (dealerPoints == 21 && playerPoints == 21)) {
 					try {
 						setPlayerLikaomgangText();
+						playerCredit += bet;
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -279,7 +286,6 @@ public class PlayerPanel extends JPanel{
 			setPlayerBustText();
 		} else if (playerPoints <= 21) {
 			setPlayerWinText();
-//			winMoney();
 		}  else if (dealerPoints > 21 && playerPoints > 21) {
 			setPlayerBustText();
 		}
@@ -287,7 +293,7 @@ public class PlayerPanel extends JPanel{
  	
  	public void setPlayerNumber(int n) {
  		playerNumber = n;
- 		playerTitle.setText("Spelare " + n);
+ 		playerTitle.setText(playerName);
  	}
  	
  	public void setCardImageW(int width) {
@@ -300,7 +306,25 @@ public class PlayerPanel extends JPanel{
  	
  	public void setPlayerBlackJack() {
 		playerStands = true;
-		playerTitle.setText("Spelare " + playerNumber + " Black Jack!");
+		blackJack = true;
+		playerTitle.setText(playerName + " Black Jack!");
 		playerTitle.setForeground(Color.BLACK);
+ 	}
+ 	
+ 	public void setPlayerName(String playerName) {
+ 		this.playerName = playerName;
+ 		playerTitle.setText(playerName);
+ 	}
+ 	
+ 	public String getPlayerName() {
+ 		return playerName;
+ 	}
+ 	
+ 	public void setPlayerCredit(int playerCredit){
+ 		this.playerCredit = playerCredit;
+ 	}
+ 	
+ 	public int getPlayerCredit() {
+ 		return playerCredit;
  	}
 }

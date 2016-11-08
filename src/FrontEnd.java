@@ -8,9 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -21,8 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 public class FrontEnd extends JFrame implements ActionListener{
 	//byt ut när en game-klass finns
@@ -32,23 +29,23 @@ public class FrontEnd extends JFrame implements ActionListener{
 	PlayerPanel spelarPanel2 = new PlayerPanel();
 	PlayerPanel spelarPanel3 = new PlayerPanel();
 	PlayerPanel spelarPanel4 = new PlayerPanel();
-	SaveAndLoad sAL = new SaveAndLoad();
 	
 	int highestPlayerPoints = 0;
 	int numberOfPlayers = 4;	//Denna variabel ändras för antal spelare man vill ha med i spelet (1-4)
 	int currentPlayer = numberOfPlayers;
-	int dealerPoints = 0;		//OBS: Dessa är placeholders för nuvarande spelares poäng. Måste hämtas med getters
+	int dealerPoints = 0;
 	int dealerPointsAce = 0;
 	int dealerAceNo = 0;
 	int cardImageH = 175;
 	int cardImageW = 120;
 	int cardCounter = 2;
-	int playerPoints = 0;
+	int playerPoints = 0;		//OBS: Dessa är placeholders för nuvarande spelares poäng. Måste hämtas med getters
 	int playerAceNo = 0;
 	int playerPointsAce = 0;
 	int noOfPlayersOut = 0;
 	boolean allPlayersStand = false;
 	public int satsning;
+	String playerName = "Spelare";
 	
 	//Menyrad
 	JMenuBar mb = new JMenuBar();
@@ -57,12 +54,12 @@ public class FrontEnd extends JFrame implements ActionListener{
 	JMenuItem titel = new JMenuItem("Tillbaka till titelmeny");
 	JMenuItem avsluta = new JMenuItem("Avsluta");
 	
-	JPanel superBody = new JPanel(); //huvudpanel
 	JPanel body = new JPanel();	
+	JScrollPane superBody = new JScrollPane(body); //huvudpanel
 	
 	JPanel dealerSpace = new JPanel();	//tre subpaneler
 	JPanel middleSpace = new JPanel();
-	JPanel playerSpace = new JPanel(); //Byt ut mot PlayerPanel-klassen efter antal spelare
+	JPanel playerSpace = new JPanel();
 
 	JPanel dealerCardSpace = new JPanel();	//subpaneler och komponenter till dealerSpace
 	JPanel dealerCardsRow = new JPanel();
@@ -95,9 +92,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 
 	
 	public FrontEnd() throws IOException{	
-		//Satsa pengar
-//		betQuestion();
-		
 		//Drar ett kort till dealern
 		drawCard(dCard1, dealerPoints, dealerPointsLabel);
 
@@ -112,7 +106,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		setTitle("Black Jack - Team 2");
 		
 		//definierar layout
-		superBody.setLayout(new BorderLayout());
+//		superBody.setLayout(new BorderLayout());
 		body.setLayout(new BorderLayout());	
 		middleSpace.setLayout(new BoxLayout(middleSpace, BoxLayout.Y_AXIS));
 		infoText.setAlignmentY(BOTTOM_ALIGNMENT);
@@ -124,9 +118,9 @@ public class FrontEnd extends JFrame implements ActionListener{
 		
 		//Lägger till meny
 		add(superBody);
-		superBody.add(mb, BorderLayout.NORTH);
+//		superBody.add(mb);//, BorderLayout.NORTH);
 		mb.add(spelMenu);
-		spelMenu.add(nSpel);
+//		spelMenu.add(nSpel);
 		spelMenu.add(titel);
 		spelMenu.add(avsluta);
 		
@@ -134,10 +128,10 @@ public class FrontEnd extends JFrame implements ActionListener{
 		titel.addActionListener(this);
 		avsluta.addActionListener(this);
 		
-		superBody.add(body, BorderLayout.CENTER);	//Lägger ut containers och komponenter
+//		superBody.add(body, BorderLayout.CENTER);	//Lägger ut containers och komponenter
 			body.add(dealerSpace, BorderLayout.NORTH);
-			body.add(middleSpace, BorderLayout.CENTER);
-			body.add(playerSpace, BorderLayout.SOUTH);
+			dealerSpace.add(middleSpace, BorderLayout.SOUTH);
+			body.add(playerSpace, BorderLayout.CENTER);
 		
 		dealerSpace.add(dealerCardSpace, BorderLayout.CENTER);
 			dealerCardSpace.add(dealerCardsRow, BorderLayout.NORTH);
@@ -442,11 +436,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		}
 		
 		if (e.getSource() == nSpel){
-			try {
-				startNewGame();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			
 		}
 		
 		if (e.getSource() == titel) {
@@ -476,7 +466,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		dCard2.setVisible(false);
 		
 		//if-satsen bör egentligen ändras här
-		while((dealerPoints < 16 && (highestPlayerPoints < 16 || highestPlayerPoints > 21)) || (dealerPoints < 17 && (highestPlayerPoints >= 16 && highestPlayerPoints <= 21))) {
+		while(dealerPoints < 17) {
 			
 			JLabel dCard3 = new JLabel();
 			dealerCardsRow.add(dCard3);
@@ -490,54 +480,11 @@ public class FrontEnd extends JFrame implements ActionListener{
 		}
 	}
 	
-	//Lägger till pengar till fil och skriver ut på skärmen om man vinner
-	public void winMoney() throws IOException{
-		spelarPanel.setPlayerWinText();
-		int kassa = sAL.getMoney();
-		sAL.setMoney(satsning * 2 + kassa);
-		sAL.Save();
-	}
-	
 	//Metoder för att skriva ut text efter omgången
 	public void dealerBustText() {
 		dealerCardSpace.add(dealerCondition, BorderLayout.SOUTH);
 		dealerCondition.setText("Dealer BUST");
 		dealerCondition.setForeground(Color.red);
-	}
-	
-	//Starta nytt spel. Ej färdigställd metod
-	public void startNewGame() throws IOException{
-
-	}
-	
-	//i början av spelet frågas hur mycket man vill satsa
-	public void betQuestion() throws IOException{
-		sAL.Load();
-		
-		if (sAL.getMoney() == 0) {
-			sAL.setMoney(Integer.parseInt(JOptionPane.showInputDialog(null, "Du har inga cash, polarn. Skriv in hur mycket pengar du vill lägga till:")));
-			sAL.Save();
-		}
-		
-		while (satsning == 0) {
-			int trySatsning = Integer.parseInt(JOptionPane.showInputDialog("Du har " + sAL.getMoney() + " kr i kassan.\nHur mycket vill du satsa?"));
-			
-			if (trySatsning > sAL.getMoney()) {
-				JOptionPane.showMessageDialog(null, "Ledsen kompis, du har inte så mycket cash. Försök igen.");
-			}
-			else
-			{
-				satsning = trySatsning;
-				sAL.setMoney(sAL.getMoney() - satsning);
-				sAL.Save();
-			}
-		}
-		
-		spelarPanel.setBet(satsning);	//lägger in satsningen till spelarpanelen
-	}
-	
-	public int getSatsning() {
-		return this.satsning;
 	}
 	
 	public void goToNextPlayer() {	//Går till nästa spelare i ordningen, hoppar över spelaren om den är bust eller har stannat
@@ -660,5 +607,49 @@ public class FrontEnd extends JFrame implements ActionListener{
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	// Setters för Menu att använda
+	public void setNumberOfPlayers(int noOfPlayers) {
+		numberOfPlayers = noOfPlayers;
+	}
+	
+	public void setSatsning1(int satsning) {
+		spelarPanel.setBet(satsning);
+	}	
+	public void setSatsning2(int satsning) {
+		spelarPanel2.setBet(satsning);
+	}	
+	public void setSatsning3(int satsning) {
+		spelarPanel3.setBet(satsning);
+	}	
+	public void setSatsning4(int satsning) {
+		spelarPanel4.setBet(satsning);
+	}
+	
+	public void setPlayerName1(String playerName) {
+		spelarPanel.setPlayerName(playerName);
+	}
+	public void setPlayerName2(String playerName) {
+		spelarPanel2.setPlayerName(playerName);
+	}
+	public void setPlayerName3(String playerName) {
+		spelarPanel3.setPlayerName(playerName);
+	}
+	public void setPlayerName4(String playerName) {
+		spelarPanel4.setPlayerName(playerName);
+	}
+	
+	public void setPlayerCredit1(int playerCredit) {
+		spelarPanel.setPlayerCredit(playerCredit);
+	}
+	public void setPlayerCredit2(int playerCredit) {
+		spelarPanel2.setPlayerCredit(playerCredit);
+	}
+	public void setPlayerCredit3(int playerCredit) {
+		spelarPanel3.setPlayerCredit(playerCredit);
+	}
+	public void setPlayerCredit4(int playerCredit) {
+		spelarPanel4.setPlayerCredit(playerCredit);
 	}
 }
