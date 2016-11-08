@@ -31,7 +31,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 	PlayerPanel spelarPanel4 = new PlayerPanel();
 	
 	int highestPlayerPoints = 0;
-	int numberOfPlayers = 4;	//Denna variabel ändras för antal spelare man vill ha med i spelet (1-4)
+	int numberOfPlayers;	//Denna variabel ändras för antal spelare man vill ha med i spelet (1-4)
 	int currentPlayer = numberOfPlayers;
 	int dealerPoints = 0;
 	int dealerPointsAce = 0;
@@ -91,7 +91,9 @@ public class FrontEnd extends JFrame implements ActionListener{
 	JButton split4 = new JButton("Split");
 
 	
-	public FrontEnd() throws IOException{	
+	public FrontEnd(int nOP) throws IOException{	
+		numberOfPlayers = nOP;
+		
 		//Drar ett kort till dealern
 		drawCard(dCard1, dealerPoints, dealerPointsLabel);
 
@@ -140,8 +142,12 @@ public class FrontEnd extends JFrame implements ActionListener{
 			dealerCardSpace.add(dealerPointsRow, BorderLayout.CENTER);
 				dealerPointsRow.add(dealerPointsLabel);
 		dealerSpace.add(cardShoeLabel, BorderLayout.EAST);
-		cardShoeLabel.setAlignmentX(LEFT_ALIGNMENT);
-				
+		cardShoeLabel.setAlignmentX(LEFT_ALIGNMENT);		
+		
+		middleSpace.add(Box.createVerticalGlue());
+		middleSpace.add(infoText);
+		middleSpace.add(divider);
+			
 		playerSpace.add(spelarPanel);	//Lägger till spelarpanel
 		spelarPanel.setCardImageW(cardImageW);
 		spelarPanel.setCardImageH(cardImageH);
@@ -199,12 +205,8 @@ public class FrontEnd extends JFrame implements ActionListener{
 			hit4.setVisible(false);
 			split4.setVisible(false);
 			spelarPanel4.setPlayerNumber(4);
-		}
-		
-		middleSpace.add(Box.createVerticalGlue());
-		middleSpace.add(infoText);
-		middleSpace.add(divider);
-			
+		}	
+	
 		//ställer in fonter
 		infoText.setFont(new Font("Comic Sans MS", Font.PLAIN, 22));
 		infoText.setForeground(Color.white);
@@ -304,9 +306,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 		
 		if (e.getSource() == hit) {	//lyssnare för när man trycker på "hit"
 			spelarPanel.setNewPlayerCard();
-			if (spelarPanel.getPlayerPoints() > highestPlayerPoints && spelarPanel.getPlayerPoints() < 22) {
-				highestPlayerPoints = spelarPanel.getPlayerPoints();
-			}
 			
 			if (numberOfPlayers > 1) {
 				hit.setVisible(false);
@@ -324,7 +323,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		}
 		
 		if (e.getSource() == stand) {	//lyssnare för när man trycker på "stand"
-			spelarPanel.setPlayerStands(true);
+			spelarPanel.setPlayerStands();
 			noOfPlayersOut += 1;
 			hit.setEnabled(false);
 			stand.setEnabled(false);
@@ -347,9 +346,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 		
 		if (e.getSource() == hit2) {	//lyssnare för när man trycker på "hit2"		
 			spelarPanel2.setNewPlayerCard();
-			if (spelarPanel2.getPlayerPoints() > highestPlayerPoints && spelarPanel.getPlayerPoints() < 22) {
-				highestPlayerPoints = spelarPanel2.getPlayerPoints();
-			}
 			hit2.setVisible(false);
 			stand2.setVisible(false);
 			split2.setVisible(false);
@@ -364,7 +360,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		}
 		
 		if (e.getSource() == stand2) {	//lyssnare för när man trycker på "stand2"
-			spelarPanel2.setPlayerStands(true);
+			spelarPanel2.setPlayerStands();
 			noOfPlayersOut += 1;
 			hit2.setEnabled(false);
 			stand2.setEnabled(false);
@@ -377,9 +373,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 		
 		if (e.getSource() == hit3) {	//lyssnare för när man trycker på "hit3"		
 			spelarPanel3.setNewPlayerCard();
-			if (spelarPanel3.getPlayerPoints() > highestPlayerPoints && spelarPanel3.getPlayerPoints() < 22) {
-				highestPlayerPoints = spelarPanel.getPlayerPoints();
-			}
 			hit3.setVisible(false);
 			stand3.setVisible(false);
 			split3.setVisible(false);
@@ -394,7 +387,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		}
 		
 		if (e.getSource() == stand3) {	//lyssnare för när man trycker på "stand3"
-			spelarPanel3.setPlayerStands(true);
+			spelarPanel3.setPlayerStands();
 			noOfPlayersOut += 1;
 			hit3.setEnabled(false);
 			stand3.setEnabled(false);
@@ -407,9 +400,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 		
 		if (e.getSource() == hit4) {	//lyssnare för när man trycker på "hit4"		
 			spelarPanel4.setNewPlayerCard();
-			if (spelarPanel4.getPlayerPoints() > highestPlayerPoints && spelarPanel4.getPlayerPoints() < 22) {
-				highestPlayerPoints = spelarPanel.getPlayerPoints();
-			}
 			hit4.setVisible(false);
 			stand4.setVisible(false);
 			split4.setVisible(false);
@@ -424,7 +414,7 @@ public class FrontEnd extends JFrame implements ActionListener{
 		}
 		
 		if (e.getSource() == stand4) {	//lyssnare för när man trycker på "stand4"
-			spelarPanel4.setPlayerStands(true);
+			spelarPanel4.setPlayerStands();
 			noOfPlayersOut += 1;
 			hit4.setEnabled(false);
 			stand4.setEnabled(false);
@@ -489,7 +479,17 @@ public class FrontEnd extends JFrame implements ActionListener{
 	
 	public void goToNextPlayer() {	//Går till nästa spelare i ordningen, hoppar över spelaren om den är bust eller har stannat
 		currentPlayer += 1;
-	
+		
+		System.out.println(numberOfPlayers);
+		System.out.println("Spelare 1 bust " + spelarPanel.getPlayerIsBust());
+		System.out.println("Spelare 1 stands " + spelarPanel.getPlayerStands());
+		System.out.println("Spelare 2 bust " + spelarPanel2.getPlayerIsBust());
+		System.out.println("Spelare 2 stands " + spelarPanel2.getPlayerStands());
+		System.out.println("Spelare 3 bust " + spelarPanel3.getPlayerIsBust());
+		System.out.println("Spelare 3 stands " + spelarPanel3.getPlayerStands());
+		System.out.println("Spelare 4 bust " + spelarPanel4.getPlayerIsBust());
+		System.out.println("Spelare 4 stands " + spelarPanel4.getPlayerStands());
+		
 		if (currentPlayer > numberOfPlayers) {	//om nuvarande spelare är på ett nummer högre än antalet spelare, går nuvarande tillbaka till spelare 1
 			currentPlayer = 1;
 		}
@@ -525,11 +525,11 @@ public class FrontEnd extends JFrame implements ActionListener{
 				} else { 
 					break;
 				}
-			} 
-		}
-		
-		if (currentPlayer > numberOfPlayers) {
-			currentPlayer = 1;
+			}
+			
+			if (currentPlayer > numberOfPlayers) {
+				currentPlayer = 1;
+			}
 		}
 		
 		if (currentPlayer == 4 && spelarPanel4.getPlayerIsBust() == false && spelarPanel4.getPlayerStands() == false){

@@ -249,8 +249,8 @@ public class PlayerPanel extends JPanel{
  		return playerStands;
  	}
  	
- 	public void setPlayerStands(boolean stands) {
- 		playerStands = stands;
+ 	public void setPlayerStands() {
+ 		playerStands = true;
  		playerTitle.setText(playerName + " stands");
  		playerTitle.setForeground(Color.blue);
  	}
