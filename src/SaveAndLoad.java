@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Scanner;
 
 public class SaveAndLoad {
-	File file = new File("src/save.txt");
+	File file = new File("save.txt");
 	private int money;
 
 	// hämta pengara
