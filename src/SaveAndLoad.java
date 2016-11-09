@@ -3,62 +3,68 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class SaveAndLoad {
-    File file = new File("src/save.txt");
-    private int money;
-    
-    //hämta pengara
-    public int getMoney() {
-        return money;
-    }
+	File file = new File("src/save.txt");
+	private int money;
 
-    //sätta pengar
-    public void setMoney(int money) {
-        this.money = money;
-    }
+	// hämta pengara
+	public int getMoney() {
+		return money;
+	}
 
-    //sparar pengarna til en fil
-    public void Save() throws IOException{
-        	
-            try {
-            // om filen inte finns, skapa den
-            if (!file.exists()) {
-                money = 1000;
-                file.createNewFile();
-            }
-            
-            FileWriter fw = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(Integer.toString(money));
-            bw.close();
+	// sätta pengar
+	public void setMoney(int money) {
+		this.money = money;
+	}
 
-            
-            System.out.println("Pengarna är sparade");
+	
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    //laddar in filen
-    public void Load() throws IOException{
-        
-    	if (!file.exists()) {
-        	Save();
-    	}else{
-    	
-    	Scanner sc = new Scanner(file);
-        String s = "";
-        while(sc.hasNext()){
-            s = sc.nextLine();
-            }
-        
-        this.money = Integer.parseInt(s);
-        	sc.close();
-    	}
-    	
-    	
-    }
+	public void Save(ArrayList<Player> al) throws IOException {
+
+		File file = new File("src/saveX.txt");
+		Iterator<Player> pIterator = al.iterator();
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+
+		// om filen inte finns, skapa den
+		if (!file.exists())
+			file.createNewFile();
+
+		while (pIterator.hasNext()) {
+			Player p = (Player) pIterator.next();
+			bw.write(p.getName() + " " + Integer.toString(p.getCredit()));
+			if (pIterator.hasNext())
+				bw.write("\n");
+		}
+
+		bw.close();
+	}
+
+	public ArrayList<Player> LoadFromFile() throws FileNotFoundException {
+		File file = new File("save.txt");
+		ArrayList<Player> al = new ArrayList<Player>();
+		try {
+			Scanner sc = new Scanner(file);
+			Player p = new Player();
+			while(sc.hasNextLine()){
+				String name = sc.next();
+				String credit = sc.next();
+				p.setName(name);
+				p.setCredit(Integer.parseInt(credit));
+				al.add(p);
+					
+			}
+			
+			sc.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return al;
+		
+	}
 }
