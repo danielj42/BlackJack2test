@@ -25,7 +25,7 @@ public class SaveAndLoad {
 
 	public void Save(ArrayList<Player> al) throws IOException {
 
-		File file = new File("src/saveX.txt");
+		File file = new File("save.txt");
 		Iterator<Player> pIterator = al.iterator();
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
