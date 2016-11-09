@@ -312,7 +312,12 @@ public class PlayerPanel extends JPanel{
  	
  	public void setPlayerName(String playerName) {
  		this.playerName = playerName;
- 		playerTitle.setText(playerName);
+ 		if (blackJack == false) {
+ 			playerTitle.setText(playerName);
+ 		}
+ 		else {
+ 			playerTitle.setText(playerName + " Black Jack!");
+ 		}
  	}
  	
  	public String getPlayerName() {
