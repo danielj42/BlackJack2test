@@ -73,8 +73,6 @@ public class PlayerPanel extends JPanel{
 		playerCol.add(playerChips);
 		playerCol.add(playerButtons);
 		playerCol.add(playerTitle);
-		
-		placeChips(bet);	//lägger ut grafik för spelmarker
 
 		//ställer in fonter
 		playerBet.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
@@ -192,6 +190,7 @@ public class PlayerPanel extends JPanel{
 	public void setBet(int satsning) {
 		bet = satsning;
 		playerBet.setText(Integer.toString(bet));
+		placeChips(bet);	//lägger ut grafik för spelmarker
 	}
 	
 	public void setPlayerPoints(int pPoints) {

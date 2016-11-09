@@ -480,16 +480,6 @@ public class FrontEnd extends JFrame implements ActionListener{
 	public void goToNextPlayer() {	//Går till nästa spelare i ordningen, hoppar över spelaren om den är bust eller har stannat
 		currentPlayer += 1;
 		
-		System.out.println(numberOfPlayers);
-		System.out.println("Spelare 1 bust " + spelarPanel.getPlayerIsBust());
-		System.out.println("Spelare 1 stands " + spelarPanel.getPlayerStands());
-		System.out.println("Spelare 2 bust " + spelarPanel2.getPlayerIsBust());
-		System.out.println("Spelare 2 stands " + spelarPanel2.getPlayerStands());
-		System.out.println("Spelare 3 bust " + spelarPanel3.getPlayerIsBust());
-		System.out.println("Spelare 3 stands " + spelarPanel3.getPlayerStands());
-		System.out.println("Spelare 4 bust " + spelarPanel4.getPlayerIsBust());
-		System.out.println("Spelare 4 stands " + spelarPanel4.getPlayerStands());
-		
 		if (currentPlayer > numberOfPlayers) {	//om nuvarande spelare är på ett nummer högre än antalet spelare, går nuvarande tillbaka till spelare 1
 			currentPlayer = 1;
 		}
